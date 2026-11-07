@@ -41,11 +41,12 @@ Requisitos: Python 3.10+, `numpy`, `pandas`, `scipy`, `shapely>=2`, `pyproj`, `p
 2. `python3 scripts/parse_catastro.py raw/catastro/A.ES.SDGC.BU.46900.buildingpart.gml work/buildings.npz`
 3. `python3 scripts/geocode_acc.py` (sitúa los atropellos en el mapa)
 4. `RF_OUT=data/ python3 scripts/build_v3.py` (sombra por fecha y hora, seguridad, colegios, callejero y simulación de plantación)
-5. `python3 scripts/validate_shadows.py 1.5 equilibrada` (comparación con la ortofoto de 2018)
-6. `RF_WEB=./ python3 scripts/make_metodo.py` (página de método con los resultados)
+5. `python3 scripts/validate_shadows.py 1.5 equilibrada` (comparación con la ortofoto de 2018; es opcional si no se quiere repetir la validación)
+6. `RF_WEB=./ python3 scripts/make_metodo.py` (página de método con los resultados; si no se han repetido la validación ni la sensibilidad, usa las de `informes/`)
 7. `RF_WEB=./ python3 scripts/make_icons.py` (iconos)
+8. `python3 scripts/comprobar_web.py` (pone al día la versión de `sw.js`, para que los móviles descarguen la web nueva, y prueba la web en Chromium, también sin conexión; necesita `playwright` con Chromium y `npm`)
 
-Para la sensibilidad: `RF_LIGHT=1 RF_OUT=work/sens_x/ RF_FLOOR_H=2.8 python3 scripts/build_v3.py` (también `RF_CROWN_K`, `RF_WALL_OFF`). Si cambian los datos, cambia también el texto `VERSION` de `sw.js` para que los móviles descarguen la versión nueva.
+Para la sensibilidad: `RF_LIGHT=1 RF_OUT=work/sens_x/ RF_FLOOR_H=2.8 python3 scripts/build_v3.py` (también `RF_CROWN_K`, `RF_WALL_OFF`).
 
 ## Licencias
 

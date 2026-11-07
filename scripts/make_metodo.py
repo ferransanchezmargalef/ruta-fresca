@@ -2,8 +2,13 @@
 import json, os
 WEB = os.environ.get('RF_WEB', 'app/')
 
-V = json.load(open('work/validacion_1.5.json'))
-S = json.load(open('work/sensibilidad.json'))
+def _datos(trabajo, informe):
+    # resultados de validate_shadows.py y de la sensibilidad; si no se han vuelto a calcular, los publicados en informes/
+    return trabajo if os.path.exists(trabajo) else informe
+
+
+V = json.load(open(_datos('work/validacion_1.5.json', 'informes/validacion.json')))
+S = json.load(open(_datos('work/sensibilidad.json', 'informes/sensibilidad.json')))
 SC = json.load(open(WEB + 'data/schools.json')); st = SC['stats']
 P = json.load(open(WEB + 'data/pois.json'))
 fmt = lambda n: f"{n:,}".replace(',', '.')
