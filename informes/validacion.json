@@ -1,0 +1,158 @@
+{
+ "carme": {
+  "zona": "El Carme (Ciutat Vella)",
+  "sol_ajustado": {
+   "acimut": 187.0,
+   "elevacion": 53.0
+  },
+  "umbral_luminancia": 108,
+  "pixeles_modelo": {
+   "exactitud": 0.721,
+   "precision": 0.564,
+   "sensibilidad": 0.778,
+   "F1": 0.654,
+   "equilibrada": 0.735,
+   "n": 13487
+  },
+  "pixeles_lejos_fachada": {
+   "exactitud": 0.756,
+   "precision": 0.542,
+   "sensibilidad": 0.658,
+   "F1": 0.594,
+   "equilibrada": 0.725,
+   "n": 5588
+  },
+  "pixeles_solo_arboles": {
+   "exactitud": 0.611,
+   "precision": 0.195,
+   "sensibilidad": 0.048,
+   "F1": 0.077,
+   "equilibrada": 0.474,
+   "n": 13487
+  },
+  "aceras": {
+   "puntos": 873,
+   "acierto_modelo": 0.676,
+   "acierto_solo_arboles": 0.617,
+   "sombra_observada": 0.294,
+   "sombra_modelo": 0.493
+  }
+ },
+ "russafa": {
+  "zona": "Russafa (Eixample)",
+  "sol_ajustado": {
+   "acimut": 148.0,
+   "elevacion": 60.0
+  },
+  "umbral_luminancia": 104,
+  "pixeles_modelo": {
+   "exactitud": 0.704,
+   "precision": 0.584,
+   "sensibilidad": 0.767,
+   "F1": 0.663,
+   "equilibrada": 0.716,
+   "n": 20609
+  },
+  "pixeles_lejos_fachada": {
+   "exactitud": 0.736,
+   "precision": 0.668,
+   "sensibilidad": 0.734,
+   "F1": 0.699,
+   "equilibrada": 0.736,
+   "n": 11956
+  },
+  "pixeles_solo_arboles": {
+   "exactitud": 0.581,
+   "precision": 0.362,
+   "sensibilidad": 0.136,
+   "F1": 0.198,
+   "equilibrada": 0.495,
+   "n": 20609
+  },
+  "aceras": {
+   "puntos": 812,
+   "acierto_modelo": 0.696,
+   "acierto_solo_arboles": 0.611,
+   "sombra_observada": 0.31,
+   "sombra_modelo": 0.526
+  }
+ },
+ "algiros": {
+  "zona": "Algirós",
+  "sol_ajustado": {
+   "acimut": 139.0,
+   "elevacion": 36.0
+  },
+  "umbral_luminancia": 128,
+  "pixeles_modelo": {
+   "exactitud": 0.641,
+   "precision": 0.409,
+   "sensibilidad": 0.641,
+   "F1": 0.499,
+   "equilibrada": 0.641,
+   "n": 18637
+  },
+  "pixeles_lejos_fachada": {
+   "exactitud": 0.669,
+   "precision": 0.424,
+   "sensibilidad": 0.608,
+   "F1": 0.5,
+   "equilibrada": 0.65,
+   "n": 14805
+  },
+  "pixeles_solo_arboles": {
+   "exactitud": 0.685,
+   "precision": 0.349,
+   "sensibilidad": 0.146,
+   "F1": 0.206,
+   "equilibrada": 0.52,
+   "n": 18637
+  },
+  "aceras": {
+   "puntos": 968,
+   "acierto_modelo": 0.601,
+   "acierto_solo_arboles": 0.621,
+   "sombra_observada": 0.306,
+   "sombra_modelo": 0.494
+  }
+ },
+ "campanar": {
+  "zona": "Campanar",
+  "sol_ajustado": {
+   "acimut": 174.0,
+   "elevacion": 58.0
+  },
+  "umbral_luminancia": 114,
+  "pixeles_modelo": {
+   "exactitud": 0.702,
+   "precision": 0.579,
+   "sensibilidad": 0.574,
+   "F1": 0.576,
+   "equilibrada": 0.673,
+   "n": 12662
+  },
+  "pixeles_lejos_fachada": {
+   "exactitud": 0.728,
+   "precision": 0.642,
+   "sensibilidad": 0.454,
+   "F1": 0.532,
+   "equilibrada": 0.662,
+   "n": 7976
+  },
+  "pixeles_solo_arboles": {
+   "exactitud": 0.634,
+   "precision": 0.426,
+   "sensibilidad": 0.107,
+   "F1": 0.171,
+   "equilibrada": 0.514,
+   "n": 12662
+  },
+  "aceras": {
+   "puntos": 739,
+   "acierto_modelo": 0.696,
+   "acierto_solo_arboles": 0.629,
+   "sombra_observada": 0.348,
+   "sombra_modelo": 0.414
+  }
+ }
+}

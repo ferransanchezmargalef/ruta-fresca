@@ -1,0 +1,1595 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ruta fresca València</title>
+<meta name="theme-color" content="#13302a">
+<link rel="icon" href="icons/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>/* required styles */
+
+.leaflet-pane,
+.leaflet-tile,
+.leaflet-marker-icon,
+.leaflet-marker-shadow,
+.leaflet-tile-container,
+.leaflet-pane > svg,
+.leaflet-pane > canvas,
+.leaflet-zoom-box,
+.leaflet-image-layer,
+.leaflet-layer {
+	position: absolute;
+	left: 0;
+	top: 0;
+	}
+.leaflet-container {
+	overflow: hidden;
+	}
+.leaflet-tile,
+.leaflet-marker-icon,
+.leaflet-marker-shadow {
+	-webkit-user-select: none;
+	   -moz-user-select: none;
+	        user-select: none;
+	  -webkit-user-drag: none;
+	}
+/* Prevents IE11 from highlighting tiles in blue */
+.leaflet-tile::selection {
+	background: transparent;
+}
+/* Safari renders non-retina tile on retina better with this, but Chrome is worse */
+.leaflet-safari .leaflet-tile {
+	image-rendering: -webkit-optimize-contrast;
+	}
+/* hack that prevents hw layers "stretching" when loading new tiles */
+.leaflet-safari .leaflet-tile-container {
+	width: 1600px;
+	height: 1600px;
+	-webkit-transform-origin: 0 0;
+	}
+.leaflet-marker-icon,
+.leaflet-marker-shadow {
+	display: block;
+	}
+/* .leaflet-container svg: reset svg max-width decleration shipped in Joomla! (joomla.org) 3.x */
+/* .leaflet-container img: map is broken in FF if you have max-width: 100% on tiles */
+.leaflet-container .leaflet-overlay-pane svg {
+	max-width: none !important;
+	max-height: none !important;
+	}
+.leaflet-container .leaflet-marker-pane img,
+.leaflet-container .leaflet-shadow-pane img,
+.leaflet-container .leaflet-tile-pane img,
+.leaflet-container img.leaflet-image-layer,
+.leaflet-container .leaflet-tile {
+	max-width: none !important;
+	max-height: none !important;
+	width: auto;
+	padding: 0;
+	}
+
+.leaflet-container img.leaflet-tile {
+	/* See: https://bugs.chromium.org/p/chromium/issues/detail?id=600120 */
+	mix-blend-mode: plus-lighter;
+}
+
+.leaflet-container.leaflet-touch-zoom {
+	-ms-touch-action: pan-x pan-y;
+	touch-action: pan-x pan-y;
+	}
+.leaflet-container.leaflet-touch-drag {
+	-ms-touch-action: pinch-zoom;
+	/* Fallback for FF which doesn't support pinch-zoom */
+	touch-action: none;
+	touch-action: pinch-zoom;
+}
+.leaflet-container.leaflet-touch-drag.leaflet-touch-zoom {
+	-ms-touch-action: none;
+	touch-action: none;
+}
+.leaflet-container {
+	-webkit-tap-highlight-color: transparent;
+}
+.leaflet-container a {
+	-webkit-tap-highlight-color: rgba(51, 181, 229, 0.4);
+}
+.leaflet-tile {
+	filter: inherit;
+	visibility: hidden;
+	}
+.leaflet-tile-loaded {
+	visibility: inherit;
+	}
+.leaflet-zoom-box {
+	width: 0;
+	height: 0;
+	-moz-box-sizing: border-box;
+	     box-sizing: border-box;
+	z-index: 800;
+	}
+/* workaround for https://bugzilla.mozilla.org/show_bug.cgi?id=888319 */
+.leaflet-overlay-pane svg {
+	-moz-user-select: none;
+	}
+
+.leaflet-pane         { z-index: 400; }
+
+.leaflet-tile-pane    { z-index: 200; }
+.leaflet-overlay-pane { z-index: 400; }
+.leaflet-shadow-pane  { z-index: 500; }
+.leaflet-marker-pane  { z-index: 600; }
+.leaflet-tooltip-pane   { z-index: 650; }
+.leaflet-popup-pane   { z-index: 700; }
+
+.leaflet-map-pane canvas { z-index: 100; }
+.leaflet-map-pane svg    { z-index: 200; }
+
+.leaflet-vml-shape {
+	width: 1px;
+	height: 1px;
+	}
+.lvml {
+	behavior: url(#default#VML);
+	display: inline-block;
+	position: absolute;
+	}
+
+
+/* control positioning */
+
+.leaflet-control {
+	position: relative;
+	z-index: 800;
+	pointer-events: visiblePainted; /* IE 9-10 doesn't have auto */
+	pointer-events: auto;
+	}
+.leaflet-top,
+.leaflet-bottom {
+	position: absolute;
+	z-index: 1000;
+	pointer-events: none;
+	}
+.leaflet-top {
+	top: 0;
+	}
+.leaflet-right {
+	right: 0;
+	}
+.leaflet-bottom {
+	bottom: 0;
+	}
+.leaflet-left {
+	left: 0;
+	}
+.leaflet-control {
+	float: left;
+	clear: both;
+	}
+.leaflet-right .leaflet-control {
+	float: right;
+	}
+.leaflet-top .leaflet-control {
+	margin-top: 10px;
+	}
+.leaflet-bottom .leaflet-control {
+	margin-bottom: 10px;
+	}
+.leaflet-left .leaflet-control {
+	margin-left: 10px;
+	}
+.leaflet-right .leaflet-control {
+	margin-right: 10px;
+	}
+
+
+/* zoom and fade animations */
+
+.leaflet-fade-anim .leaflet-popup {
+	opacity: 0;
+	-webkit-transition: opacity 0.2s linear;
+	   -moz-transition: opacity 0.2s linear;
+	        transition: opacity 0.2s linear;
+	}
+.leaflet-fade-anim .leaflet-map-pane .leaflet-popup {
+	opacity: 1;
+	}
+.leaflet-zoom-animated {
+	-webkit-transform-origin: 0 0;
+	    -ms-transform-origin: 0 0;
+	        transform-origin: 0 0;
+	}
+svg.leaflet-zoom-animated {
+	will-change: transform;
+}
+
+.leaflet-zoom-anim .leaflet-zoom-animated {
+	-webkit-transition: -webkit-transform 0.25s cubic-bezier(0,0,0.25,1);
+	   -moz-transition:    -moz-transform 0.25s cubic-bezier(0,0,0.25,1);
+	        transition:         transform 0.25s cubic-bezier(0,0,0.25,1);
+	}
+.leaflet-zoom-anim .leaflet-tile,
+.leaflet-pan-anim .leaflet-tile {
+	-webkit-transition: none;
+	   -moz-transition: none;
+	        transition: none;
+	}
+
+.leaflet-zoom-anim .leaflet-zoom-hide {
+	visibility: hidden;
+	}
+
+
+/* cursors */
+
+.leaflet-interactive {
+	cursor: pointer;
+	}
+.leaflet-grab {
+	cursor: -webkit-grab;
+	cursor:    -moz-grab;
+	cursor:         grab;
+	}
+.leaflet-crosshair,
+.leaflet-crosshair .leaflet-interactive {
+	cursor: crosshair;
+	}
+.leaflet-popup-pane,
+.leaflet-control {
+	cursor: auto;
+	}
+.leaflet-dragging .leaflet-grab,
+.leaflet-dragging .leaflet-grab .leaflet-interactive,
+.leaflet-dragging .leaflet-marker-draggable {
+	cursor: move;
+	cursor: -webkit-grabbing;
+	cursor:    -moz-grabbing;
+	cursor:         grabbing;
+	}
+
+/* marker & overlays interactivity */
+.leaflet-marker-icon,
+.leaflet-marker-shadow,
+.leaflet-image-layer,
+.leaflet-pane > svg path,
+.leaflet-tile-container {
+	pointer-events: none;
+	}
+
+.leaflet-marker-icon.leaflet-interactive,
+.leaflet-image-layer.leaflet-interactive,
+.leaflet-pane > svg path.leaflet-interactive,
+svg.leaflet-image-layer.leaflet-interactive path {
+	pointer-events: visiblePainted; /* IE 9-10 doesn't have auto */
+	pointer-events: auto;
+	}
+
+/* visual tweaks */
+
+.leaflet-container {
+	background: #ddd;
+	outline-offset: 1px;
+	}
+.leaflet-container a {
+	color: #0078A8;
+	}
+.leaflet-zoom-box {
+	border: 2px dotted #38f;
+	background: rgba(255,255,255,0.5);
+	}
+
+
+/* general typography */
+.leaflet-container {
+	font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-size: 0.75rem;
+	line-height: 1.5;
+	}
+
+
+/* general toolbar styles */
+
+.leaflet-bar {
+	box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+	border-radius: 4px;
+	}
+.leaflet-bar a {
+	background-color: #fff;
+	border-bottom: 1px solid #ccc;
+	width: 26px;
+	height: 26px;
+	line-height: 26px;
+	display: block;
+	text-align: center;
+	text-decoration: none;
+	color: black;
+	}
+.leaflet-bar a,
+.leaflet-control-layers-toggle {
+	background-position: 50% 50%;
+	background-repeat: no-repeat;
+	display: block;
+	}
+.leaflet-bar a:hover,
+.leaflet-bar a:focus {
+	background-color: #f4f4f4;
+	}
+.leaflet-bar a:first-child {
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+	}
+.leaflet-bar a:last-child {
+	border-bottom-left-radius: 4px;
+	border-bottom-right-radius: 4px;
+	border-bottom: none;
+	}
+.leaflet-bar a.leaflet-disabled {
+	cursor: default;
+	background-color: #f4f4f4;
+	color: #bbb;
+	}
+
+.leaflet-touch .leaflet-bar a {
+	width: 30px;
+	height: 30px;
+	line-height: 30px;
+	}
+.leaflet-touch .leaflet-bar a:first-child {
+	border-top-left-radius: 2px;
+	border-top-right-radius: 2px;
+	}
+.leaflet-touch .leaflet-bar a:last-child {
+	border-bottom-left-radius: 2px;
+	border-bottom-right-radius: 2px;
+	}
+
+/* zoom control */
+
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out {
+	font: bold 18px 'Lucida Console', Monaco, monospace;
+	text-indent: 1px;
+	}
+
+.leaflet-touch .leaflet-control-zoom-in, .leaflet-touch .leaflet-control-zoom-out  {
+	font-size: 22px;
+	}
+
+
+/* layers control */
+
+.leaflet-control-layers {
+	box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+	background: #fff;
+	border-radius: 5px;
+	}
+.leaflet-control-layers-toggle {
+	background-image: url(images/layers.png);
+	width: 36px;
+	height: 36px;
+	}
+.leaflet-retina .leaflet-control-layers-toggle {
+	background-image: url(images/layers-2x.png);
+	background-size: 26px 26px;
+	}
+.leaflet-touch .leaflet-control-layers-toggle {
+	width: 44px;
+	height: 44px;
+	}
+.leaflet-control-layers .leaflet-control-layers-list,
+.leaflet-control-layers-expanded .leaflet-control-layers-toggle {
+	display: none;
+	}
+.leaflet-control-layers-expanded .leaflet-control-layers-list {
+	display: block;
+	position: relative;
+	}
+.leaflet-control-layers-expanded {
+	padding: 6px 10px 6px 6px;
+	color: #333;
+	background: #fff;
+	}
+.leaflet-control-layers-scrollbar {
+	overflow-y: scroll;
+	overflow-x: hidden;
+	padding-right: 5px;
+	}
+.leaflet-control-layers-selector {
+	margin-top: 2px;
+	position: relative;
+	top: 1px;
+	}
+.leaflet-control-layers label {
+	display: block;
+	font-size: 13px;
+	font-size: 1.08333em;
+	}
+.leaflet-control-layers-separator {
+	height: 0;
+	border-top: 1px solid #ddd;
+	margin: 5px -10px 5px -6px;
+	}
+
+/* Default icon URLs */
+.leaflet-default-icon-path { /* used only in path-guessing heuristic, see L.Icon.Default */
+	background-image: url(images/marker-icon.png);
+	}
+
+
+/* attribution and scale controls */
+
+.leaflet-container .leaflet-control-attribution {
+	background: #fff;
+	background: rgba(255, 255, 255, 0.8);
+	margin: 0;
+	}
+.leaflet-control-attribution,
+.leaflet-control-scale-line {
+	padding: 0 5px;
+	color: #333;
+	line-height: 1.4;
+	}
+.leaflet-control-attribution a {
+	text-decoration: none;
+	}
+.leaflet-control-attribution a:hover,
+.leaflet-control-attribution a:focus {
+	text-decoration: underline;
+	}
+.leaflet-attribution-flag {
+	display: inline !important;
+	vertical-align: baseline !important;
+	width: 1em;
+	height: 0.6669em;
+	}
+.leaflet-left .leaflet-control-scale {
+	margin-left: 5px;
+	}
+.leaflet-bottom .leaflet-control-scale {
+	margin-bottom: 5px;
+	}
+.leaflet-control-scale-line {
+	border: 2px solid #777;
+	border-top: none;
+	line-height: 1.1;
+	padding: 2px 5px 1px;
+	white-space: nowrap;
+	-moz-box-sizing: border-box;
+	     box-sizing: border-box;
+	background: rgba(255, 255, 255, 0.8);
+	text-shadow: 1px 1px #fff;
+	}
+.leaflet-control-scale-line:not(:first-child) {
+	border-top: 2px solid #777;
+	border-bottom: none;
+	margin-top: -2px;
+	}
+.leaflet-control-scale-line:not(:first-child):not(:last-child) {
+	border-bottom: 2px solid #777;
+	}
+
+.leaflet-touch .leaflet-control-attribution,
+.leaflet-touch .leaflet-control-layers,
+.leaflet-touch .leaflet-bar {
+	box-shadow: none;
+	}
+.leaflet-touch .leaflet-control-layers,
+.leaflet-touch .leaflet-bar {
+	border: 2px solid rgba(0,0,0,0.2);
+	background-clip: padding-box;
+	}
+
+
+/* popup */
+
+.leaflet-popup {
+	position: absolute;
+	text-align: center;
+	margin-bottom: 20px;
+	}
+.leaflet-popup-content-wrapper {
+	padding: 1px;
+	text-align: left;
+	border-radius: 12px;
+	}
+.leaflet-popup-content {
+	margin: 13px 24px 13px 20px;
+	line-height: 1.3;
+	font-size: 13px;
+	font-size: 1.08333em;
+	min-height: 1px;
+	}
+.leaflet-popup-content p {
+	margin: 17px 0;
+	margin: 1.3em 0;
+	}
+.leaflet-popup-tip-container {
+	width: 40px;
+	height: 20px;
+	position: absolute;
+	left: 50%;
+	margin-top: -1px;
+	margin-left: -20px;
+	overflow: hidden;
+	pointer-events: none;
+	}
+.leaflet-popup-tip {
+	width: 17px;
+	height: 17px;
+	padding: 1px;
+
+	margin: -10px auto 0;
+	pointer-events: auto;
+
+	-webkit-transform: rotate(45deg);
+	   -moz-transform: rotate(45deg);
+	    -ms-transform: rotate(45deg);
+	        transform: rotate(45deg);
+	}
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+	background: white;
+	color: #333;
+	box-shadow: 0 3px 14px rgba(0,0,0,0.4);
+	}
+.leaflet-container a.leaflet-popup-close-button {
+	position: absolute;
+	top: 0;
+	right: 0;
+	border: none;
+	text-align: center;
+	width: 24px;
+	height: 24px;
+	font: 16px/24px Tahoma, Verdana, sans-serif;
+	color: #757575;
+	text-decoration: none;
+	background: transparent;
+	}
+.leaflet-container a.leaflet-popup-close-button:hover,
+.leaflet-container a.leaflet-popup-close-button:focus {
+	color: #585858;
+	}
+.leaflet-popup-scrolled {
+	overflow: auto;
+	}
+
+.leaflet-oldie .leaflet-popup-content-wrapper {
+	-ms-zoom: 1;
+	}
+.leaflet-oldie .leaflet-popup-tip {
+	width: 24px;
+	margin: 0 auto;
+
+	-ms-filter: "progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678)";
+	filter: progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678);
+	}
+
+.leaflet-oldie .leaflet-control-zoom,
+.leaflet-oldie .leaflet-control-layers,
+.leaflet-oldie .leaflet-popup-content-wrapper,
+.leaflet-oldie .leaflet-popup-tip {
+	border: 1px solid #999;
+	}
+
+
+/* div icon */
+
+.leaflet-div-icon {
+	background: #fff;
+	border: 1px solid #666;
+	}
+
+
+/* Tooltip */
+/* Base styles for the element that has a tooltip */
+.leaflet-tooltip {
+	position: absolute;
+	padding: 6px;
+	background-color: #fff;
+	border: 1px solid #fff;
+	border-radius: 3px;
+	color: #222;
+	white-space: nowrap;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	pointer-events: none;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+	}
+.leaflet-tooltip.leaflet-interactive {
+	cursor: pointer;
+	pointer-events: auto;
+	}
+.leaflet-tooltip-top:before,
+.leaflet-tooltip-bottom:before,
+.leaflet-tooltip-left:before,
+.leaflet-tooltip-right:before {
+	position: absolute;
+	pointer-events: none;
+	border: 6px solid transparent;
+	background: transparent;
+	content: "";
+	}
+
+/* Directions */
+
+.leaflet-tooltip-bottom {
+	margin-top: 6px;
+}
+.leaflet-tooltip-top {
+	margin-top: -6px;
+}
+.leaflet-tooltip-bottom:before,
+.leaflet-tooltip-top:before {
+	left: 50%;
+	margin-left: -6px;
+	}
+.leaflet-tooltip-top:before {
+	bottom: 0;
+	margin-bottom: -12px;
+	border-top-color: #fff;
+	}
+.leaflet-tooltip-bottom:before {
+	top: 0;
+	margin-top: -12px;
+	margin-left: -6px;
+	border-bottom-color: #fff;
+	}
+.leaflet-tooltip-left {
+	margin-left: -6px;
+}
+.leaflet-tooltip-right {
+	margin-left: 6px;
+}
+.leaflet-tooltip-left:before,
+.leaflet-tooltip-right:before {
+	top: 50%;
+	margin-top: -6px;
+	}
+.leaflet-tooltip-left:before {
+	right: 0;
+	margin-right: -12px;
+	border-left-color: #fff;
+	}
+.leaflet-tooltip-right:before {
+	left: 0;
+	margin-left: -12px;
+	border-right-color: #fff;
+	}
+
+/* Printing */
+
+@media print {
+	/* Prevent printers from removing background-images of controls. */
+	.leaflet-control {
+		-webkit-print-color-adjust: exact;
+		print-color-adjust: exact;
+		}
+	}
+</style>
+<style>
+/* Plan: la ciudad dibujada solo por su sombra a la hora elegida (sin mapa base). Panel a la izquierda, mapa a la derecha; en móvil, mapa arriba.
+   Escala de sol (naranja) a sombra (azul): se distingue también con daltonismo. Interfaz en castellano y valenciano. */
+:root{
+  --paper:#e8eeeb; --panel:#fbfcfb; --ink:#13302a; --muted:#53675f; --line:#d2dcd7; --accent:#1f5f98;
+  --s0:#cf5a26; --s1:#eba15f; --s2:#bfae7d; --s3:#6aaad3; --s4:#235f98;
+  --route:#7d2b8f; --short:#13302a; --pit:#8b5a2b; --rest:#24302c; --cold:#1f8fb3; --atr:#a3162f; --map-bg:#e2e8e5;
+  --display:"Bricolage Grotesque","Avenir Next","Segoe UI",sans-serif;
+  --body:"Public Sans","Helvetica Neue",Arial,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0f1916; --panel:#14211d; --ink:#e3ece8; --muted:#9db1aa; --line:#2a3a35; --accent:#7fbbe6;
+    --s0:#ff7f45; --s1:#f2b072; --s2:#d6c9a2; --s3:#7fbbe6; --s4:#4f93e6;
+    --route:#d99be8; --short:#e3ece8; --pit:#d39a63; --rest:#e3ece8; --cold:#5fd0f0; --atr:#ff6f86; --map-bg:#0b1311; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0f1916; --panel:#14211d; --ink:#e3ece8; --muted:#9db1aa; --line:#2a3a35; --accent:#7fbbe6;
+  --s0:#ff7f45; --s1:#f2b072; --s2:#d6c9a2; --s3:#7fbbe6; --s4:#4f93e6;
+  --route:#d99be8; --short:#e3ece8; --pit:#d39a63; --rest:#e3ece8; --cold:#5fd0f0; --atr:#ff6f86; --map-bg:#0b1311; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--paper);color:var(--ink);font:15px/1.45 var(--body);font-variant-numeric:tabular-nums}
+.app{display:grid;grid-template-columns:minmax(340px,420px) 1fr;height:100%}
+aside{background:var(--panel);border-right:1px solid var(--line);overflow-y:auto;display:flex;flex-direction:column;gap:14px;padding:20px 20px 24px}
+#map{position:relative;height:100%;background:var(--map-bg)}
+.brand{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.brand h1{font:800 34px/1 var(--display);letter-spacing:-.02em;margin:0}
+.brand h1 span{background:linear-gradient(90deg,var(--s0),var(--s2) 50%,var(--s4));-webkit-background-clip:text;background-clip:text;color:transparent}
+.brand p{margin:4px 0 0;color:var(--muted);font-size:14px}
+.lang{font:600 12.5px var(--body);border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:5px 9px;border-radius:999px;cursor:pointer;white-space:nowrap}
+.seg{display:grid;gap:4px;background:var(--paper);padding:4px;border-radius:10px}
+.seg button{font:600 13px/1.2 var(--body);border:0;background:transparent;color:var(--muted);padding:8px 4px;border-radius:7px;cursor:pointer}
+.seg button[aria-selected="true"],.seg button[aria-pressed="true"]{background:var(--panel);color:var(--ink);box-shadow:0 1px 3px rgb(0 0 0 / .12)}
+.tabs{grid-template-columns:repeat(3,1fr)}
+.tabs button{padding:9px 4px}
+.hours{grid-template-columns:repeat(6,1fr)}
+.two{grid-template-columns:1fr 1fr}
+.three{grid-template-columns:repeat(3,1fr)}
+.ctrl{display:flex;flex-direction:column;gap:6px}
+.ctrl .lbl{font-weight:600;font-size:13px;display:flex;justify-content:space-between;gap:8px}
+.ctrl .lbl span{font-weight:500;color:var(--muted)}
+.ctrlrow{display:grid;grid-template-columns:1fr 1.4fr;gap:10px}
+button:focus-visible,input:focus-visible,summary:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.mode{display:flex;flex-direction:column;gap:12px}
+.help{margin:0;color:var(--muted);font-size:14px;max-width:65ch}
+label.field{display:flex;flex-direction:column;gap:5px;font-weight:600;font-size:13px}
+.field input,.addr input{font:15px var(--body);padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--ink);min-width:0;width:100%}
+.addr{display:grid;grid-template-columns:1fr 70px auto;gap:6px;align-items:end}
+.addr .num input{text-align:center}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.headline{font:700 19px/1.25 var(--display);margin:0;text-wrap:balance}
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.opt{border-radius:10px;padding:10px 12px;background:var(--paper);display:flex;flex-direction:column;gap:3px}
+.opt h3{margin:0;font:600 11.5px/1.2 var(--body);text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:flex;align-items:center;gap:6px}
+.opt .big{font:700 28px/1.05 var(--display)}
+.opt .sub{font-size:13px;color:var(--muted)}
+.opt .safe{font-size:12.5px;color:var(--ink);border-top:1px solid var(--line);padding-top:5px;margin-top:3px}
+.opt .safe b{color:var(--atr)}
+.swatch{display:inline-block;width:14px;height:4px;border-radius:2px;flex:none;background:var(--route)}
+.swatch.dash{background:repeating-linear-gradient(90deg,var(--short) 0 3px,transparent 3px 6px)}
+.bar{height:6px;border-radius:3px;background:var(--s0);overflow:hidden;margin:3px 0 1px}
+.bar i{display:block;height:100%;background:var(--s4)}
+details.steps{border-top:1px solid var(--line);padding-top:8px}
+details.steps summary{cursor:pointer;font-weight:600;font-size:13.5px}
+details.steps ol{margin:8px 0 0;padding-left:20px;font-size:13.5px;display:flex;flex-direction:column;gap:4px}
+details.steps ol span{color:var(--muted)}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kpi{background:var(--paper);border-radius:10px;padding:10px 12px}
+.kpi b{display:block;font:700 26px/1.1 var(--display)}
+.kpi span{font-size:12.5px;color:var(--muted)}
+h2{font:700 16px/1.25 var(--display);margin:0}
+.list{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.row{display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:9px 4px;border:0;border-bottom:1px solid var(--line);cursor:pointer;background:none;text-align:left;color:inherit;font:inherit}
+.row:hover{background:var(--paper)}
+.row .nm{font-weight:600;font-size:14px}
+.row .meta{font-size:12.5px;color:var(--muted);grid-column:1}
+.row .pct{grid-row:1 / span 2;grid-column:2;align-self:center;font:700 18px/1 var(--display)}
+.pill{display:inline-block;font-size:11px;font-weight:700;padding:1px 7px;border-radius:999px;margin-left:5px;vertical-align:1px}
+.pill.alta{background:color-mix(in srgb,var(--s0) 20%,transparent);color:color-mix(in srgb,var(--s0) 75%,var(--ink))}
+.pill.media{background:color-mix(in srgb,var(--s1) 24%,transparent);color:color-mix(in srgb,var(--s1) 50%,var(--ink))}
+.toggles{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:13.5px}
+.toggles label{display:flex;gap:6px;align-items:center;cursor:pointer}
+.legend{display:flex;flex-direction:column;gap:6px}
+.legend .scale{display:grid;grid-template-columns:repeat(5,1fr);gap:3px}
+.legend .scale i{height:8px;border-radius:2px}
+.legend .labels{display:grid;grid-template-columns:repeat(5,1fr);gap:3px;font-size:11.5px;color:var(--muted)}
+.note{font-size:12.5px;color:var(--muted);margin:0;max-width:65ch}
+.note a,.more a{color:var(--accent)}
+.more{font-size:14px;font-weight:600;margin:0}
+.btn{font:600 13.5px var(--body);border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:8px 12px;border-radius:8px;cursor:pointer;align-self:flex-start;white-space:nowrap}
+.btn:hover{border-color:var(--accent)}
+.stops{font-size:13.5px;display:flex;gap:6px 14px;flex-wrap:wrap}
+.stops span::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--rest);margin-right:6px;vertical-align:1px}
+.stops span.cold::before{background:var(--cold)}
+.msg{font-size:13px;color:var(--muted);margin:0;min-height:1em}
+.hidden{display:none !important}
+.loading{position:absolute;inset:0;display:grid;place-items:center;color:var(--muted);font:600 15px var(--body);pointer-events:none;z-index:500}
+.leaflet-container{background:var(--map-bg);font:13px/1.4 var(--body)}
+.leaflet-tooltip{background:var(--panel);color:var(--ink);border:1px solid var(--line);box-shadow:0 1px 4px rgb(0 0 0 / .18);font:600 12.5px/1.3 var(--body);padding:4px 8px}
+.leaflet-tooltip-top:before{border-top-color:var(--panel)}
+.leaflet-tooltip-bottom:before{border-bottom-color:var(--panel)}
+.leaflet-tooltip-left:before{border-left-color:var(--panel)}
+.leaflet-tooltip-right:before{border-right-color:var(--panel)}
+.leaflet-tooltip.tag{font-weight:700}
+.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:var(--panel);color:var(--ink)}
+.leaflet-popup-content{margin:12px 16px;font-size:13.5px;line-height:1.45}
+.leaflet-popup-content b{font-family:var(--display)}
+.leaflet-container a.leaflet-popup-close-button{color:var(--muted)}
+.leaflet-control-attribution{background:color-mix(in srgb,var(--panel) 85%,transparent) !important;color:var(--muted) !important}
+.leaflet-control-attribution a{color:var(--accent) !important}
+.leaflet-bar a{background:var(--panel) !important;color:var(--ink) !important;border-color:var(--line) !important}
+@media (max-width:760px){
+  .app{grid-template-columns:1fr;height:auto;min-height:100%}
+  #map{height:56vh;order:-1}
+  aside{border-right:0;border-top:1px solid var(--line)}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside id="panel">
+    <div class="brand">
+      <div><h1><span>Ruta fresca</span></h1><p data-t="subtitle"></p></div>
+      <button class="lang" id="lang-btn" type="button"></button>
+    </div>
+
+    <div class="seg tabs" role="tablist" data-t-aria="modeAria">
+      <button id="tab-cole" role="tab" aria-selected="true" aria-controls="mode-cole" data-mode="cole" type="button" data-t="tabCole"></button>
+      <button id="tab-lento" role="tab" aria-selected="false" aria-controls="mode-lento" data-mode="lento" type="button" data-t="tabLento"></button>
+      <button id="tab-ayto" role="tab" aria-selected="false" aria-controls="mode-ayto" data-mode="ayto" type="button" data-t="tabAyto"></button>
+    </div>
+
+    <div class="ctrlrow">
+      <div class="ctrl"><div class="lbl" data-t="dayLabel"></div><div class="seg two" id="dates" role="group"></div></div>
+      <div class="ctrl"><div class="lbl" data-t="prioLabel"></div><div class="seg three" id="prio" role="group"></div></div>
+    </div>
+    <div class="ctrl">
+      <div class="lbl"><span data-t="hourLabel" style="color:var(--ink);font-weight:600"></span><span id="hour-sun"></span></div>
+      <div class="seg hours" id="hours" role="group"></div>
+    </div>
+
+    <section id="mode-cole" class="mode" role="tabpanel" aria-labelledby="tab-cole">
+      <p class="help" data-t="helpCole"></p>
+      <label class="field"><span data-t="schoolField"></span>
+        <input id="school-input" list="school-list" autocomplete="off" data-t-ph="schoolPh">
+      </label>
+      <div class="field"><span style="font-weight:600;font-size:13px" data-t="fromCole"></span>
+        <div class="addr">
+          <input id="street-cole" list="street-list" autocomplete="off" data-t-ph="streetPh" data-t-aria="streetAria">
+          <span class="num"><input id="num-cole" inputmode="numeric" autocomplete="off" data-t-ph="numPh" data-t-aria="numAria"></span>
+          <button class="btn here" type="button" data-for="cole" data-t="here"></button>
+        </div>
+        <p class="msg" id="msg-cole" aria-live="polite"></p>
+      </div>
+      <div class="card" id="cole-result" aria-live="polite"></div>
+    </section>
+
+    <section id="mode-lento" class="mode hidden" role="tabpanel" aria-labelledby="tab-lento">
+      <p class="help" data-t="helpLento"></p>
+      <div class="field"><span style="font-weight:600;font-size:13px" data-t="fromLento"></span>
+        <div class="addr">
+          <input id="street-lento" list="street-list" autocomplete="off" data-t-ph="streetPh" data-t-aria="streetAria">
+          <span class="num"><input id="num-lento" inputmode="numeric" autocomplete="off" data-t-ph="numPh" data-t-aria="numAria"></span>
+          <button class="btn here" type="button" data-for="lento" data-t="here"></button>
+        </div>
+        <p class="msg" id="msg-lento" aria-live="polite"></p>
+      </div>
+      <label class="field"><span data-t="toMayores"></span>
+        <input id="mayores-input" list="mayores-list" autocomplete="off" data-t-ph="mayoresPh">
+      </label>
+      <div class="card" id="lento-result" aria-live="polite"></div>
+      <button class="btn" id="lento-reset" type="button" data-t="reset"></button>
+    </section>
+
+    <section id="mode-ayto" class="mode hidden" role="tabpanel" aria-labelledby="tab-ayto">
+      <div class="kpis" id="kpis"></div>
+      <p class="help" id="ayto-lead"></p>
+      <div class="toggles">
+        <label><input type="checkbox" id="t-camins" checked> <span data-t="tCamins"></span></label>
+        <label><input type="checkbox" id="t-pits" checked> <span data-t="tPits"></span></label>
+        <label><input type="checkbox" id="t-atr"> <span data-t="tAtr"></span></label>
+        <label><input type="checkbox" id="t-cold"> <span data-t="tCold"></span></label>
+      </div>
+      <h2 data-t="hPlant"></h2>
+      <div class="seg three" id="plant-seg" role="group" data-t-aria="plantAria"></div>
+      <p class="help" id="plant-help" aria-live="polite"></p>
+      <div id="plant-gain" class="hidden">
+        <h2 data-t="hGain"></h2>
+        <p class="help" data-t="helpGain"></p>
+        <div class="list" id="gain-list"></div>
+      </div>
+      <h2 data-t="hPrio"></h2>
+      <p class="help" data-t="helpPrio"></p>
+      <div class="list" id="prio-list"></div>
+      <h2 data-t="hCamins"></h2>
+      <p class="help" id="camins-help"></p>
+      <div class="list" id="camins-list"></div>
+    </section>
+
+    <div class="legend" aria-label="Leyenda">
+      <h2 id="legend-title"></h2>
+      <div class="scale"><i style="background:var(--s0)"></i><i style="background:var(--s1)"></i><i style="background:var(--s2)"></i><i style="background:var(--s3)"></i><i style="background:var(--s4)"></i></div>
+      <div class="labels"><span data-t="sun"></span><span>1–25 %</span><span>26–50 %</span><span>51–75 %</span><span>+75 %</span></div>
+    </div>
+    <p class="more"><a href="metodo.html" data-t="methodLink"></a></p>
+    <p class="note" id="note"></p>
+  </aside>
+  <div id="map"><div class="loading" id="loading">…</div></div>
+</div>
+
+<datalist id="school-list"></datalist>
+<datalist id="street-list"></datalist>
+<datalist id="mayores-list"></datalist>
+
+<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="anonymous"></script>
+<script>
+"use strict";
+// ---------------- textos: castellano y valenciano ----------------
+const TXT = {
+es: {
+  subtitle: "València · el camino con más sombra y menos riesgo, calle a calle", langBtn: "Valencià", modeAria: "Modo",
+  tabCole: "Al cole", tabLento: "Paso lento", tabAyto: "Ayuntamiento", dayLabel: "Día", prioLabel: "Prioridad", hourLabel: "Hora",
+  dates: ["15 jun", "15 sep"], datesLong: ["15 de junio", "15 de septiembre"], prios: ["Sombra", "Equilibrio", "Seguridad"],
+  helpCole: "Elige el colegio y marca desde dónde salís: toca el mapa, escribe la calle y el número o usa tu ubicación. La línea morada busca sombra y evita los cruces peligrosos; la de puntos es la más corta.",
+  schoolField: "Colegio", schoolPh: "Nombre del colegio", fromCole: "Salís desde", streetPh: "Calle", streetAria: "Calle de salida", numPh: "Nº", numAria: "Número", here: "Desde aquí",
+  helpLento: "Para ir con calma: la ruta busca sombra, evita los cruces peligrosos y pasa junto a bancos, fuentes y aseos públicos. Marca la salida y la llegada tocando el mapa, o escríbelas.",
+  fromLento: "Desde", toMayores: "Hasta un centro de mayores", mayoresPh: "Nombre del centro (o toca el mapa)", reset: "Empezar de nuevo",
+  tCamins: "Caminos escolares oficiales", tPits: "Alcorques sin árbol", tAtr: "Atropellos 2022-2025", tCold: "Fuentes de agua fría",
+  hPrio: "Colegios donde plantar primero", helpPrio: "Poca sombra en 250 m a la redonda entre las 13 y las 17 h de junio (el 25 % de colegios con menos) y barrio de vulnerabilidad media o alta. Al lado, los alcorques sin árbol y los atropellos registrados en ese radio.",
+  hCamins: "Caminos escolares oficiales", sun: "Sol", methodLink: "Cómo funciona, de dónde salen los datos y cuánto acierta →",
+  note: 'Ruta fresca · Ferran Sánchez-Margalef, 2026. Datos abiertos de noviembre de 2026: <a href="https://opendata.vlci.valencia.es/" target="_blank" rel="noopener">Ajuntament de València</a> (CC BY 4.0), Dirección General del Catastro y © personas colaboradoras de <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> (ODbL). La sombra es una estimación: cuenta edificios y árboles, no toldos ni balcones.',
+  loading: "Cargando la red de calles…", loadErr: "No se han podido cargar los datos",
+  legend: h => `Sombra en la acera a las ${h} h`, sunAlt: e => `sol a ${e}° de altura`,
+  pickSchool: "Elige un colegio para empezar.", firstSchool: "Primero elige un colegio.", markFrom: "Ahora marca desde dónde salís.",
+  around: (p, h) => `En los 250 m alrededor del colegio hay un ${p} % de sombra a las ${h} h.`,
+  outside: "Ese punto queda fuera de la red de calles de València.", same: "La salida y la llegada están prácticamente en el mismo sitio.", noPath: "No encuentro un camino a pie entre esos dos puntos.",
+  gainShade: (a, b) => `la sombra pasa del ${a} % al ${b} %`, gainCross: n => `evitas ${n === 1 ? "un cruce" : n + " cruces"} sin semáforo`,
+  gainAtr: n => n === 1 ? "te apartas de un punto donde hubo un atropello" : `te apartas de puntos donde hubo ${n} atropellos`,
+  withMore: (m, g) => `Con ${m} m más, ${g}.`, sameLen: g => `${g}, sin alargar el camino.`, alreadyBest: p => `Aquí la ruta más corta ya es la mejor: ${p} % de sombra.`,
+  inExchange: c => ` A cambio, ${c}.`, costShade: (a, b) => `algo menos de sombra (${a} % frente a ${b} %)`, costCross: n => `${n === 1 ? "un cruce" : n + " cruces"} más sin semáforo`, and: " y ",
+  fresh: "Ruta fresca", short: "La más corta", slow: "Paso lento", inShade: "a la sombra",
+  safeLine: (c, a) => `${c === 1 ? "1 cruce" : c + " cruces"} sin semáforo · ${a === 1 ? "1 atropello" : a + " atropellos"}`,
+  helpColeRes: (h, a, b) => `A las ${h} h, minutos a paso infantil (4 km/h). Al sol: ${a} m por la ruta fresca y ${b} m por la más corta. Abajo, cruces de calles con tráfico y atropellos registrados en 2022-2025 en cada recorrido.`,
+  markHere: "Toca el mapa para marcar dónde estás.", markTo: "Ahora toca adónde vas, o elige un centro de mayores.",
+  slowHead: (p, g) => `${p} % a la sombra y nunca más de ${g} m sin un banco, una fuente o un aseo.`, slowNoRest: p => `${p} % a la sombra, aunque sin bancos ni fuentes por el camino.`,
+  stops: (b, f, c, a) => [`${b === 1 ? "1 banco" : b + " bancos"}`, `${f === 1 ? "1 fuente" : f + " fuentes"}`, `${a === 1 ? "1 aseo" : a + " aseos"}`, c ? `${c === 1 ? "1 fuente" : c + " fuentes"} de agua fría` : ""],
+  slowHelp: (g, gap, h) => `${g ? g + " respecto a la más corta. " : ""}Por la más corta, el tramo más largo sin dónde parar es de ${gap} m. Minutos a 3 km/h, a las ${h} h.`,
+  vul: {Alta: "alta", Media: "media", Baja: "baja", none: "sin dato"}, reg: {"PÚBLICO": "público", "PRIVADO": "privado", "CONCERTADO": "concertado"},
+  popShade: (h, p, q) => `Sombra en 250 m a las ${h} h: <b>${p} %</b> (de 13 a 17 h en junio: ${q} %)`, popPits: (n, m) => `Alcorques sin árbol cerca: ${n} · atropellos 2022-2025: ${m}`,
+  popVul: v => `Vulnerabilidad del barrio: ${v}`, goSchool: "Ir a este colegio",
+  kpi1: h => `de sombra media en las aceras de las calles con edificios a las ${h} h`, kpi2: h => `de esas calles casi sin sombra (menos del 10 %) a las ${h} h`,
+  kpi3: "colegios con poca sombra en las horas de calor y en barrios vulnerables", kpi4: "cruces de calles con tráfico sin semáforo",
+  lead: (h, b, t, p, a, A) => `A las ${h} h, los edificios dan sombra al ${b} % de esas aceras y los árboles la suben al ${t} %. Donde los edificios no tapan el sol, solo dan sombra los árboles: por eso cuentan los ${p} alcorques sin árbol que recoge el inventario municipal (no en todos se puede plantar). Hemos situado ${a} de los ${A} atropellos de 2022-2025 a partir de su dirección.`,
+  prioMeta: (n, m) => `${n === 1 ? "1 alcorque vacío" : n + " alcorques vacíos"} · ${m === 1 ? "1 atropello" : m + " atropellos"}`,
+  caminsHelp: h => `Sombra a las ${h} h a lo largo de cada camino escolar señalizado por el Ayuntamiento.`, caminLen: n => `${n} m de camino escolar`,
+  caminTip: (n, p, h) => `Camino escolar · ${n}: ${p} % a la sombra a las ${h} h`,
+  bench: "Banco", fountain: "Fuente", toilet: "Aseo público", coldF: "Fuente de agua fría", start: "Salida", end: "Llegada",
+  stepsTitle: "Indicaciones paso a paso", stStart: s => `Sal por ${s}`, stRight: s => `Gira a la derecha por ${s}`, stLeft: s => `Gira a la izquierda por ${s}`, stOn: s => `Sigue por ${s}`,
+  stEnd: "Llegas a tu destino", unnamed: "un camino sin nombre", crossSig: "cruzas una calle con tráfico con semáforo", crossNo: "cruzas una calle con tráfico sin semáforo",
+  locating: "Buscando tu ubicación…", noLoc: "No se ha podido obtener tu ubicación.", pickStreet: "Elige una calle de la lista.", locOutside: "Tu ubicación queda fuera de València.",
+  hPlant: "¿Y si se plantaran los alcorques vacíos?", plantAria: "Simular la plantación de los alcorques vacíos", plantOpts: ["Ahora", "Árbol habitual", "Árbol grande"], plantKind: ["habitual", "grande"],
+  plantIntro: n => `Simula un árbol ya crecido en cada uno de los ${n} alcorques de calle sin árbol y mira cuánta sombra ganarían las aceras y los colegios. El árbol habitual es el más frecuente en las calles de València, con copa y altura de 4 a 8 m; el grande, de 8 a 12 m.`,
+  plantLoading: "Cargando la simulación…", plantErr: "No se ha podido cargar la simulación.",
+  plantRes: (k, h, a, b, g) => `Con un árbol ${k} en cada alcorque, a las ${h} h la sombra de las aceras de las calles con edificios pasaría del ${a} % al ${b} %. En los tramos donde se planta, sube ${g} puntos de media. Destacados en el mapa, el 25 % de alcorques que más sombra darían. No en todos los alcorques se puede plantar.`,
+  kpi1p: (h, a) => `de sombra media en las aceras de las calles con edificios a las ${h} h, con los alcorques plantados (ahora, ${a} %)`, kpi2p: (h, a) => `de esas calles casi sin sombra, con los alcorques plantados (ahora, ${a} %)`,
+  hGain: "Colegios que más sombra ganarían", helpGain: "Sombra en 250 m a la redonda entre las 13 y las 17 h de junio, ahora y con los alcorques plantados.",
+  gainMeta: n => `${n === 1 ? "1 alcorque vacío" : n + " alcorques vacíos"} a menos de 250 m`, popPlant: (a, b, h) => `Con los alcorques plantados: de ${a} % a <b>${b} %</b> a las ${h} h`
+},
+va: {
+  subtitle: "València · el camí amb més ombra i menys risc, carrer a carrer", langBtn: "Castellano", modeAria: "Mode",
+  tabCole: "A l'escola", tabLento: "Pas lent", tabAyto: "Ajuntament", dayLabel: "Dia", prioLabel: "Prioritat", hourLabel: "Hora",
+  dates: ["15 juny", "15 set"], datesLong: ["15 de juny", "15 de setembre"], prios: ["Ombra", "Equilibri", "Seguretat"],
+  helpCole: "Tria el col·legi i marca des d'on eixiu: toca el mapa, escriu el carrer i el número o fes servir la teua ubicació. La línia morada busca ombra i evita els encreuaments perillosos; la de punts és la més curta.",
+  schoolField: "Col·legi", schoolPh: "Nom del col·legi", fromCole: "Eixiu des de", streetPh: "Carrer", streetAria: "Carrer d'eixida", numPh: "Núm.", numAria: "Número", here: "Des d'ací",
+  helpLento: "Per a anar amb calma: la ruta busca ombra, evita els encreuaments perillosos i passa per bancs, fonts i lavabos públics. Marca l'eixida i l'arribada tocant el mapa, o escriu-les.",
+  fromLento: "Des de", toMayores: "Fins a un centre de majors", mayoresPh: "Nom del centre (o toca el mapa)", reset: "Tornar a començar",
+  tCamins: "Camins escolars oficials", tPits: "Escocells sense arbre", tAtr: "Atropellaments 2022-2025", tCold: "Fonts d'aigua freda",
+  hPrio: "Col·legis on plantar primer", helpPrio: "Poca ombra en 250 m a la redona entre les 13 i les 17 h de juny (el 25 % de col·legis amb menys) i barri de vulnerabilitat mitjana o alta. Al costat, els escocells sense arbre i els atropellaments registrats en eixe radi.",
+  hCamins: "Camins escolars oficials", sun: "Sol", methodLink: "Com funciona, d'on ixen les dades i quant encerta (en castellà) →",
+  note: 'Ruta fresca · Ferran Sánchez-Margalef, 2026. Dades obertes de novembre de 2026: <a href="https://opendata.vlci.valencia.es/" target="_blank" rel="noopener">Ajuntament de València</a> (CC BY 4.0), Direcció General del Cadastre i © persones col·laboradores d\'<a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> (ODbL). L\'ombra és una estimació: compta edificis i arbres, no tendals ni balcons.',
+  loading: "Carregant la xarxa de carrers…", loadErr: "No s'han pogut carregar les dades",
+  legend: h => `Ombra a la vorera a les ${h} h`, sunAlt: e => `sol a ${e}° d'altura`,
+  pickSchool: "Tria un col·legi per a començar.", firstSchool: "Primer tria un col·legi.", markFrom: "Ara marca des d'on eixiu.",
+  around: (p, h) => `En els 250 m al voltant del col·legi hi ha un ${p} % d'ombra a les ${h} h.`,
+  outside: "Eixe punt queda fora de la xarxa de carrers de València.", same: "L'eixida i l'arribada estan pràcticament en el mateix lloc.", noPath: "No trobe cap camí a peu entre eixos dos punts.",
+  gainShade: (a, b) => `l'ombra passa del ${a} % al ${b} %`, gainCross: n => `evites ${n === 1 ? "un encreuament" : n + " encreuaments"} sense semàfor`,
+  gainAtr: n => n === 1 ? "t'apartes d'un punt on hi va haver un atropellament" : `t'apartes de punts on hi va haver ${n} atropellaments`,
+  withMore: (m, g) => `Amb ${m} m més, ${g}.`, sameLen: g => `${g}, sense allargar el camí.`, alreadyBest: p => `Ací la ruta més curta ja és la millor: ${p} % d'ombra.`,
+  inExchange: c => ` A canvi, ${c}.`, costShade: (a, b) => `una mica menys d'ombra (${a} % davant de ${b} %)`, costCross: n => `${n === 1 ? "un encreuament" : n + " encreuaments"} més sense semàfor`, and: " i ",
+  fresh: "Ruta fresca", short: "La més curta", slow: "Pas lent", inShade: "a l'ombra",
+  safeLine: (c, a) => `${c === 1 ? "1 encreuament" : c + " encreuaments"} sense semàfor · ${a === 1 ? "1 atropellament" : a + " atropellaments"}`,
+  helpColeRes: (h, a, b) => `A les ${h} h, minuts a pas infantil (4 km/h). Al sol: ${a} m per la ruta fresca i ${b} m per la més curta. A baix, encreuaments de carrers amb trànsit i atropellaments registrats en 2022-2025 en cada recorregut.`,
+  markHere: "Toca el mapa per a marcar on estàs.", markTo: "Ara toca on vas, o tria un centre de majors.",
+  slowHead: (p, g) => `${p} % a l'ombra i mai més de ${g} m sense un banc, una font o un lavabo.`, slowNoRest: p => `${p} % a l'ombra, encara que sense bancs ni fonts pel camí.`,
+  stops: (b, f, c, a) => [`${b === 1 ? "1 banc" : b + " bancs"}`, `${f === 1 ? "1 font" : f + " fonts"}`, `${a === 1 ? "1 lavabo" : a + " lavabos"}`, c ? `${c === 1 ? "1 font" : c + " fonts"} d'aigua freda` : ""],
+  slowHelp: (g, gap, h) => `${g ? g + " respecte de la més curta. " : ""}Per la més curta, el tram més llarg sense on parar és de ${gap} m. Minuts a 3 km/h, a les ${h} h.`,
+  vul: {Alta: "alta", Media: "mitjana", Baja: "baixa", none: "sense dada"}, reg: {"PÚBLICO": "públic", "PRIVADO": "privat", "CONCERTADO": "concertat"},
+  popShade: (h, p, q) => `Ombra en 250 m a les ${h} h: <b>${p} %</b> (de 13 a 17 h al juny: ${q} %)`, popPits: (n, m) => `Escocells sense arbre a prop: ${n} · atropellaments 2022-2025: ${m}`,
+  popVul: v => `Vulnerabilitat del barri: ${v}`, goSchool: "Anar a este col·legi",
+  kpi1: h => `d'ombra mitjana a les voreres dels carrers amb edificis a les ${h} h`, kpi2: h => `d'eixos carrers quasi sense ombra (menys del 10 %) a les ${h} h`,
+  kpi3: "col·legis amb poca ombra en les hores de calor i en barris vulnerables", kpi4: "encreuaments de carrers amb trànsit sense semàfor",
+  lead: (h, b, t, p, a, A) => `A les ${h} h, els edificis fan ombra al ${b} % d'eixes voreres i els arbres la pugen al ${t} %. On els edificis no tapen el sol, només fan ombra els arbres: per això compten els ${p} escocells sense arbre que recull l'inventari municipal (no en tots es pot plantar). Hem situat ${a} dels ${A} atropellaments de 2022-2025 a partir de la seua adreça.`,
+  prioMeta: (n, m) => `${n === 1 ? "1 escocell buit" : n + " escocells buits"} · ${m === 1 ? "1 atropellament" : m + " atropellaments"}`,
+  caminsHelp: h => `Ombra a les ${h} h al llarg de cada camí escolar senyalitzat per l'Ajuntament.`, caminLen: n => `${n} m de camí escolar`,
+  caminTip: (n, p, h) => `Camí escolar · ${n}: ${p} % a l'ombra a les ${h} h`,
+  bench: "Banc", fountain: "Font", toilet: "Lavabo públic", coldF: "Font d'aigua freda", start: "Eixida", end: "Arribada",
+  stepsTitle: "Indicacions pas a pas", stStart: s => `Ix per ${s}`, stRight: s => `Gira a la dreta per ${s}`, stLeft: s => `Gira a l'esquerra per ${s}`, stOn: s => `Continua per ${s}`,
+  stEnd: "Arribes al teu destí", unnamed: "un camí sense nom", crossSig: "creues un carrer amb trànsit amb semàfor", crossNo: "creues un carrer amb trànsit sense semàfor",
+  locating: "Buscant la teua ubicació…", noLoc: "No s'ha pogut obtindre la teua ubicació.", pickStreet: "Tria un carrer de la llista.", locOutside: "La teua ubicació queda fora de València.",
+  hPlant: "I si es plantaren els escocells buits?", plantAria: "Simular la plantació dels escocells buits", plantOpts: ["Ara", "Arbre habitual", "Arbre gran"], plantKind: ["habitual", "gran"],
+  plantIntro: n => `Simula un arbre ja crescut en cadascun dels ${n} escocells de carrer sense arbre i mira quanta ombra guanyarien les voreres i els col·legis. L'arbre habitual és el més freqüent als carrers de València, amb copa i altura de 4 a 8 m; el gran, de 8 a 12 m.`,
+  plantLoading: "Carregant la simulació…", plantErr: "No s'ha pogut carregar la simulació.",
+  plantRes: (k, h, a, b, g) => `Amb un arbre ${k} a cada escocell, a les ${h} h l'ombra de les voreres dels carrers amb edificis passaria del ${a} % al ${b} %. En els trams on es planta, puja ${g} punts de mitjana. Destacats al mapa, el 25 % d'escocells que més ombra donarien. No en tots els escocells es pot plantar.`,
+  kpi1p: (h, a) => `d'ombra mitjana a les voreres dels carrers amb edificis a les ${h} h, amb els escocells plantats (ara, ${a} %)`, kpi2p: (h, a) => `d'eixos carrers quasi sense ombra, amb els escocells plantats (ara, ${a} %)`,
+  hGain: "Col·legis que més ombra guanyarien", helpGain: "Ombra en 250 m a la redona entre les 13 i les 17 h de juny, ara i amb els escocells plantats.",
+  gainMeta: n => `${n === 1 ? "1 escocell buit" : n + " escocells buits"} a menys de 250 m`, popPlant: (a, b, h) => `Amb els escocells plantats: de ${a} % a <b>${b} %</b> a les ${h} h`
+}};
+let LANG = "es";
+try { const q = new URLSearchParams(location.search).get("lang"); const s = localStorage.getItem("rf-lang"); LANG = q === "va" || q === "es" ? q : (s === "va" || s === "es" ? s : (/^(ca|va)/i.test(navigator.language || "") ? "va" : "es")); } catch(e) {}
+const T = () => TXT[LANG];
+
+const $ = id => document.getElementById(id);
+const fmt = n => Math.round(n).toLocaleString(LANG === "va" ? "ca-ES" : "es-ES");
+const fmt1 = n => n.toLocaleString(LANG === "va" ? "ca-ES" : "es-ES", {minimumFractionDigits: 1, maximumFractionDigits: 1});
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const cssVar = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const bucket = s => s <= 0 ? 0 : s <= 25 ? 1 : s <= 50 ? 2 : s <= 75 ? 3 : 4;
+const bucketCol = s => cssVar(["--s0","--s1","--s2","--s3","--s4"][bucket(s)]);
+const dec = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+const joinList = a => a.length <= 1 ? (a[0] || "") : a.slice(0, -1).join(", ") + T().and + a[a.length - 1];
+const upFirst = s => s ? s[0].toUpperCase() + s.slice(1) : s;
+
+const UPPER = new Set(["CEIP","IES","CIPFP","CEE","CPEE","CEIPSO","EI","EEI","CRA","CC","CDP","FP","FPA","EOI","ESO","II","III","IV","VI","VII","VIII","IX","XI","XII","XIII","XXIII","SL","SA","SLL","UPV","CEU","CV","AMPA","ONCE"]);
+const PREP = new Set(["de","del","dels","d","y","e","i","en","per","para","por","a","al","con","amb","sobre","entre"]);
+const ART = new Set(["la","las","los","el","els","les","lo"]);
+const cap = w => w.replace(/(^|[-("«])([a-zà-ÿ])/g, (m, p, c) => p + c.toUpperCase());
+function nice(s){
+  if(!s) return "";
+  const ws = String(s).trim().replace(/´/g, "'").split(/\s+/); let prevPrep = false;
+  return ws.map((w, i) => {
+    const bare = w.toUpperCase().replace(/[.,;:()]/g, "");
+    if(UPPER.has(bare)){ prevPrep = false; return w.toUpperCase(); }
+    const lw = w.toLowerCase();
+    if(lw === "i" && i === ws.length - 1){ prevPrep = false; return "I"; }
+    const ap = lw.match(/^([dl])['’](.+)$/);
+    if(ap){ const pre = ap[1] === "d" ? (i > 0 ? "d" : "D") : (i > 0 && prevPrep ? "l" : "L"); prevPrep = false; return pre + "'" + cap(ap[2]); }
+    if(i > 0 && PREP.has(lw)){ prevPrep = true; return lw; }
+    if(i > 0 && prevPrep && ART.has(lw)){ prevPrep = false; return lw; }
+    prevPrep = false; return cap(lw);
+  }).join(" ");
+}
+
+let state = {mode: "cole", di: 0, hi: 2, prio: 1, plant: 0, school: null, origin: null, lento: {a: null, b: null}};
+function applyStatic(){
+  document.documentElement.lang = LANG === "va" ? "ca-valencia" : "es";
+  document.querySelectorAll("[data-t]").forEach(el => { const v = T()[el.dataset.t]; if(typeof v === "string") el.textContent = v; });
+  document.querySelectorAll("[data-t-ph]").forEach(el => el.placeholder = T()[el.dataset.tPh]);
+  document.querySelectorAll("[data-t-aria]").forEach(el => el.setAttribute("aria-label", T()[el.dataset.tAria]));
+  $("lang-btn").textContent = T().langBtn; $("note").innerHTML = T().note;
+  const l = $("loading"); if(l) l.textContent = T().loading;
+}
+applyStatic();
+
+async function loadJSON(p){ const r = await fetch(p); if(!r.ok) throw new Error(p); return r.json(); }
+Promise.all([loadJSON("data/graph.json"), loadJSON("data/pois.json"), loadJSON("data/schools.json")])
+  .then(([g, p, s]) => init(g, p, s))
+  .catch(e => { const l = $("loading"); if(l) l.textContent = T().loadErr + " (" + e.message + ")."; console.error(e); });
+
+function init(G, P, SC){
+  $("loading").remove();
+  const HOURS = G.hours, NH = HOURS.length; state.hi = Math.max(0, HOURS.indexOf(13));
+  const SH = G.sh.map(dec), TRAF = dec(G.traf), LACC = dec(G.lacc), NFLAG = dec(G.nflag), NACC = dec(G.nacc);
+  const K = () => state.di * NH + state.hi;           // escenario (fecha, hora)
+  const H = () => HOURS[state.hi];
+
+  // ---------- simulador de plantación (se carga al usarlo) ----------
+  let PL = null, PLP = null;
+  const plantOn = () => state.mode === "ayto" && state.plant > 0 && !!PL;
+  const PS = () => PL.sc[state.plant - 1];
+  const curSH = () => plantOn() ? PL.shp[state.plant - 1][K()] : SH[K()];
+  const decU32 = s => { const b = dec(s); return new Uint32Array(b.buffer, b.byteOffset, b.byteLength >> 2); };
+  function loadPlant(){
+    if(!PLP) PLP = loadJSON("data/plant.json").then(j => {
+      j.shp = j.sc.map(sc => {
+        sc.idxA = decU32(sc.idx); sc.pitV = dec(sc.pit);
+        const q = Array.from(sc.pitV).sort((a, b) => a - b); sc.pitQ = Math.max(1, q[Math.floor(q.length * 0.75)]);
+        return sc.sh.map((s, k) => { const v = dec(s), a = SH[k].slice(); sc.idxA.forEach((i, j2) => { a[i] = v[j2]; }); return a; });
+      });
+      PL = j; return j;
+    });
+    return PLP;
+  }
+
+  // ---------- red peatonal ----------
+  const nN = G.nodes.length, nL = G.links.length;
+  const nLat = new Float64Array(nN), nLon = new Float64Array(nN);
+  for(let i = 0; i < nN; i++){ nLat[i] = G.nodes[i][0] / 1e6; nLon[i] = G.nodes[i][1] / 1e6; }
+  const lA = new Int32Array(nL), lB = new Int32Array(nL), lLen = new Float32Array(nL), lRest = new Int32Array(nL), lName = new Int32Array(nL);
+  const off = new Int32Array(nL + 1);
+  let tot = 0; for(let i = 0; i < nL; i++){ off[i] = tot; tot += 2 + G.links[i][5].length / 2; } off[nL] = tot;
+  const cLat = new Float64Array(tot), cLon = new Float64Array(tot), wx = new Float64Array(tot), wy = new Float64Array(tot);
+  const bx0 = new Float64Array(nL), by0 = new Float64Array(nL), bx1 = new Float64Array(nL), by1 = new Float64Array(nL);
+  const toW = k => { wx[k] = (cLon[k] + 180) / 360; const s = Math.sin(cLat[k] * Math.PI / 180); wy[k] = 0.5 - Math.log((1 + s) / (1 - s)) / (4 * Math.PI); };
+  for(let i = 0; i < nL; i++){
+    const Lk = G.links[i]; lA[i] = Lk[0]; lB[i] = Lk[1]; lLen[i] = Lk[2]; lRest[i] = Lk[3]; lName[i] = Lk[4];
+    let k = off[i], la = G.nodes[Lk[0]][0], lo = G.nodes[Lk[0]][1];
+    cLat[k] = la / 1e6; cLon[k] = lo / 1e6; toW(k); k++;
+    const gm = Lk[5];
+    for(let j = 0; j < gm.length; j += 2){ la += gm[j]; lo += gm[j + 1]; cLat[k] = la / 1e6; cLon[k] = lo / 1e6; toW(k); k++; }
+    cLat[k] = nLat[Lk[1]]; cLon[k] = nLon[Lk[1]]; toW(k);
+    let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+    for(let q = off[i]; q < off[i + 1]; q++){ if(wx[q] < x0) x0 = wx[q]; if(wx[q] > x1) x1 = wx[q]; if(wy[q] < y0) y0 = wy[q]; if(wy[q] > y1) y1 = wy[q]; }
+    bx0[i] = x0; by0[i] = y0; bx1[i] = x1; by1[i] = y1;
+  }
+  const deg = new Int32Array(nN);
+  for(let i = 0; i < nL; i++){ if(lA[i] !== lB[i]){ deg[lA[i]]++; deg[lB[i]]++; } }
+  const adjStart = new Int32Array(nN + 1); for(let i = 0; i < nN; i++) adjStart[i + 1] = adjStart[i] + deg[i];
+  const fill = adjStart.slice(0, nN), adjLink = new Int32Array(adjStart[nN]);
+  for(let i = 0; i < nL; i++){ if(lA[i] !== lB[i]){ adjLink[fill[lA[i]]++] = i; adjLink[fill[lB[i]]++] = i; } }
+
+  const KX = 111320 * Math.cos(39.47 * Math.PI / 180), KY = 110540;
+  const dist = (la1, lo1, la2, lo2) => Math.hypot((lo2 - lo1) * KX, (la2 - la1) * KY);
+  const CELL = 0.002, grid = new Map();
+  for(let i = 0; i < nN; i++){ if(!deg[i]) continue; const k = Math.floor(nLat[i] / CELL) + "|" + Math.floor(nLon[i] / CELL); let a = grid.get(k); if(!a){ a = []; grid.set(k, a); } a.push(i); }
+  function nearestNode(la, lo){
+    let best = -1, bd = Infinity; const ci = Math.floor(la / CELL), cj = Math.floor(lo / CELL);
+    for(let r = 1; r <= 3 && best < 0; r++){
+      for(let a = ci - r; a <= ci + r; a++) for(let b = cj - r; b <= cj + r; b++){
+        const arr = grid.get(a + "|" + b); if(!arr) continue;
+        for(const i of arr){ const d = dist(la, lo, nLat[i], nLon[i]); if(d < bd){ bd = d; best = i; } }
+      }
+    }
+    return bd < 400 ? best : -1;
+  }
+
+  // ---------- rutas (A*) ----------
+  // Coste de cada tramo = longitud x castigo por sol (según la sombra a la hora elegida) x castigo por tráfico; más un coste fijo por
+  // cruzar una vía con tráfico (80 m sin semáforo, 20 m con semáforo) y por cada atropello registrado (30 m, hasta 3). La "prioridad"
+  // reparte el peso entre sombra y seguridad. La más corta solo mira la longitud.
+  const PRIO = [{s: 2.0, k: 0.5}, {s: 1.5, k: 1.0}, {s: 1.0, k: 2.0}];
+  function route(src, dst, mode){
+    const hsh = SH[K()], P_ = PRIO[state.prio], safe = mode !== "corta";
+    const sw = mode === "lenta" ? P_.s * 0.8 : P_.s, kk = P_.k, hmin = mode === "lenta" ? 0.85 : 1;
+    const base = mode === "corta" ? (i => lLen[i]) : mode === "fresca" ? (i => lLen[i] * (1 + sw * (1 - hsh[i] / 100)))
+      : (i => lLen[i] * (1 + sw * (1 - hsh[i] / 100)) * (lRest[i] > 0 ? 0.85 : 1));
+    const gS = new Float64Array(nN).fill(Infinity), prev = new Int32Array(nN).fill(-1), done = new Uint8Array(nN);
+    const hn = [], hp = [];
+    const push = (n, p) => { hn.push(n); hp.push(p); let i = hn.length - 1; while(i > 0){ const pa = (i - 1) >> 1; if(hp[pa] <= hp[i]) break; [hn[pa], hn[i]] = [hn[i], hn[pa]]; [hp[pa], hp[i]] = [hp[i], hp[pa]]; i = pa; } };
+    const pop = () => { const top = hn[0], ln = hn.pop(), lp = hp.pop(); if(hn.length){ hn[0] = ln; hp[0] = lp; let i = 0; for(;;){ const l = 2 * i + 1, r = l + 1; let m = i; if(l < hn.length && hp[l] < hp[m]) m = l; if(r < hn.length && hp[r] < hp[m]) m = r; if(m === i) break; [hn[m], hn[i]] = [hn[i], hn[m]]; [hp[m], hp[i]] = [hp[i], hp[m]]; i = m; } } return top; };
+    const tLa = nLat[dst], tLo = nLon[dst];
+    gS[src] = 0; push(src, hmin * dist(nLat[src], nLon[src], tLa, tLo));
+    while(hn.length){
+      const u = pop(); if(done[u]) continue; done[u] = 1; if(u === dst) break;
+      const pl = prev[u], pT = pl >= 0 ? TRAF[pl] : 9;
+      for(let k = adjStart[u]; k < adjStart[u + 1]; k++){
+        const li = adjLink[k], v = lA[li] === u ? lB[li] : lA[li];
+        if(done[v]) continue;
+        let c = base(li);
+        if(safe){
+          c = c * (1 + 0.1 * kk * TRAF[li]) + 30 * kk * Math.min(LACC[li], 3);
+          if(u !== src){
+            if((NFLAG[u] & 1) && pT < 2 && TRAF[li] < 2) c += kk * ((NFLAG[u] & 2) ? 20 : 80);
+            c += 30 * kk * Math.min(NACC[u], 3);
+          }
+        }
+        const ng = gS[u] + c;
+        if(ng < gS[v]){ gS[v] = ng; prev[v] = li; push(v, ng + hmin * dist(nLat[v], nLon[v], tLa, tLo)); }
+      }
+    }
+    if(!isFinite(gS[dst])) return null;
+    const links = []; let cur = dst;
+    while(cur !== src){ const li = prev[cur]; links.push(li); cur = lA[li] === cur ? lB[li] : lA[li]; }
+    links.reverse();
+    const pts = [], seq = []; let at = src, len = 0, sh = 0, crossSig = 0, crossNo = 0, atr = 0;
+    links.forEach((li, k) => {
+      let cross = 0;
+      if(k > 0){
+        if((NFLAG[at] & 1) && TRAF[links[k - 1]] < 2 && TRAF[li] < 2){ if(NFLAG[at] & 2){ crossSig++; cross = 2; } else { crossNo++; cross = 1; } }
+        atr += NACC[at];
+      }
+      atr += LACC[li];
+      const s = off[li], e = off[li + 1], i0 = pts.length ? pts.length - 1 : 0;
+      if(lA[li] === at){ for(let q = (pts.length ? s + 1 : s); q < e; q++) pts.push([cLat[q], cLon[q]]); at = lB[li]; }
+      else { for(let q = (pts.length ? e - 2 : e - 1); q >= s; q--) pts.push([cLat[q], cLon[q]]); at = lA[li]; }
+      seq.push({li, i0, i1: pts.length - 1, cross});
+      len += lLen[li]; sh += lLen[li] * hsh[li] / 100;
+    });
+    return {pts, seq, len, pct: len ? Math.round(100 * sh / len) : 0, sun: Math.round(len - sh), crossSig, crossNo, atr};
+  }
+
+  // ---------- indicaciones calle a calle ----------
+  const bearing = (a, b) => Math.atan2((b[1] - a[1]) * KX, (b[0] - a[0]) * KY) * 180 / Math.PI;
+  function directions(r){
+    const t = T(), steps = []; let curName = null, curLen = 0, turn = null, notes = [];
+    const nm = li => lName[li] ? G.names[lName[li]] : t.unnamed;
+    const flush = () => { if(curName !== null) steps.push({name: curName, len: curLen, turn, notes}); };
+    r.seq.forEach((s, k) => {
+      const name = nm(s.li);
+      if(curName === null){ curName = name; curLen = lLen[s.li]; turn = "start"; notes = []; return; }
+      if(name === curName){ curLen += lLen[s.li]; if(s.cross) notes.push(s.cross === 2 ? t.crossSig : t.crossNo); return; }
+      const p = r.pts, a0 = p[Math.max(0, s.i0 - 1)], a1 = p[s.i0], b1 = p[Math.min(p.length - 1, s.i0 + 1)];
+      let d = bearing(a1, b1) - bearing(a0, a1); d = ((d + 540) % 360) - 180;
+      flush();
+      curName = name; curLen = lLen[s.li]; turn = d > 35 ? "right" : d < -35 ? "left" : "on"; notes = s.cross ? [s.cross === 2 ? t.crossSig : t.crossNo] : [];
+    });
+    flush();
+    const items = steps.map(s => {
+      const f = s.turn === "start" ? t.stStart : s.turn === "right" ? t.stRight : s.turn === "left" ? t.stLeft : t.stOn;
+      return `<li>${esc(f(s.name))} <span>· ${fmt(s.len)} m${s.notes.length ? " · " + esc(s.notes[0]) : ""}</span></li>`;
+    });
+    items.push(`<li>${esc(t.stEnd)}</li>`);
+    return `<details class="steps"><summary>${esc(t.stepsTitle)}</summary><ol>${items.join("")}</ol></details>`;
+  }
+
+  // ---------- bancos, fuentes, aseos y fuentes de agua fría ----------
+  const rest = [];
+  for(const [tp, arr] of [["banco", P.bancos], ["fuente", P.fuentes], ["aseo", P.urinarios]]) for(const [la, lo] of arr) rest.push({t: tp, la, lo});
+  for(const [la, lo] of P.pusdar) rest.push({t: "fria", la, lo});
+  const RCELL = 0.0005, rgrid = new Map();
+  rest.forEach((r, i) => { const k = Math.floor(r.la / RCELL) + "|" + Math.floor(r.lo / RCELL); let a = rgrid.get(k); if(!a){ a = []; rgrid.set(k, a); } a.push(i); });
+  function restAlong(pts){
+    const found = new Set(); let gap = 0, maxGap = 0;
+    for(let i = 0; i < pts.length; i++){
+      if(i > 0) gap += dist(pts[i - 1][0], pts[i - 1][1], pts[i][0], pts[i][1]);
+      const ci = Math.floor(pts[i][0] / RCELL), cj = Math.floor(pts[i][1] / RCELL); let near = false;
+      for(let a = ci - 1; a <= ci + 1; a++) for(let b = cj - 1; b <= cj + 1; b++){
+        const arr = rgrid.get(a + "|" + b); if(!arr) continue;
+        for(const j of arr){ if(dist(pts[i][0], pts[i][1], rest[j].la, rest[j].lo) <= 25){ found.add(j); near = true; } }
+      }
+      if(near){ maxGap = Math.max(maxGap, gap); gap = 0; }
+    }
+    maxGap = Math.max(maxGap, gap);
+    const c = {banco: 0, fuente: 0, aseo: 0, fria: 0}; found.forEach(j => c[rest[j].t]++);
+    return {count: c, ids: [...found], maxGap: Math.round(maxGap)};
+  }
+
+  // ---------- callejero municipal: calle y número ----------
+  let CAL = null, calP = null;
+  const loadCalles = () => calP || (calP = loadJSON("data/calles.json").then(c => {
+    const byName = new Map();
+    c.segs.forEach(s => { const nm = nice(c.names[s[0]]); let a = byName.get(nm); if(!a){ a = []; byName.set(nm, a); } a.push(s); });
+    CAL = byName; $("street-list").innerHTML = [...byName.keys()].sort((a, b) => a.localeCompare(b, "es")).map(n => `<option value="${esc(n)}"></option>`).join("");
+    return byName;
+  }));
+  const segPts = s => { const out = []; let la = 0, lo = 0; const f = s[5]; for(let j = 0; j < f.length; j += 2){ la += f[j]; lo += f[j + 1]; out.push([la / 1e6, lo / 1e6]); } return out; };
+  function along(pts, fr){
+    let total = 0; const d = [];
+    for(let i = 1; i < pts.length; i++){ const x = dist(pts[i - 1][0], pts[i - 1][1], pts[i][0], pts[i][1]); d.push(x); total += x; }
+    let target = total * Math.min(Math.max(fr, 0), 1);
+    for(let i = 0; i < d.length; i++){ if(target <= d[i] || i === d.length - 1){ const t = d[i] ? target / d[i] : 0; return [pts[i][0] + (pts[i + 1][0] - pts[i][0]) * t, pts[i][1] + (pts[i + 1][1] - pts[i][1]) * t]; } target -= d[i]; }
+    return pts[0];
+  }
+  function geocode(name, num){
+    const segs = CAL && CAL.get(name); if(!segs) return null;
+    const n = parseInt(num, 10);
+    if(n > 0){
+      let best = null;
+      for(const s of segs) for(const [f, t] of [[s[1], s[2]], [s[3], s[4]]]){
+        if(!f || !t) continue; const lo = Math.min(f, t), hi = Math.max(f, t);
+        const dd = n < lo ? lo - n : n > hi ? n - hi : 0, par = (lo % 2) === (n % 2) ? 0 : 0.5;
+        if(dd + par <= 20 && (!best || dd + par < best.d)) best = {d: dd + par, s, fr: t === f ? 0.5 : (n - f) / (t - f)};
+      }
+      if(best) return along(segPts(best.s), best.fr);
+    }
+    let longest = null, ll = -1;
+    for(const s of segs){ const p = segPts(s); let L = 0; for(let i = 1; i < p.length; i++) L += dist(p[i - 1][0], p[i - 1][1], p[i][0], p[i][1]); if(L > ll){ ll = L; longest = p; } }
+    return longest ? along(longest, 0.5) : null;
+  }
+  function addrHandler(which){
+    const st = $("street-" + which), nu = $("num-" + which), msg = $("msg-" + which);
+    const go = () => {
+      if(!CAL) return; const name = st.value.trim(); if(!name) return;
+      const ll = geocode(name, nu.value); if(!ll){ msg.textContent = T().pickStreet; return; }
+      msg.textContent = "";
+      if(which === "cole"){ state.origin = ll; renderCole(true); } else { state.lento = {a: ll, b: state.lento.b}; renderLento(true); }
+    };
+    st.addEventListener("focus", loadCalles, {once: true});
+    st.addEventListener("input", () => { if(CAL && CAL.has(st.value.trim())){ go(); st.blur(); } });
+    nu.addEventListener("change", go);
+    nu.addEventListener("keydown", e => { if(e.key === "Enter") go(); });
+  }
+  addrHandler("cole"); addrHandler("lento");
+  document.querySelectorAll(".here").forEach(b => b.addEventListener("click", () => {
+    const which = b.dataset.for, msg = $("msg-" + which);
+    if(!("geolocation" in navigator)){ msg.textContent = T().noLoc; return; }
+    msg.textContent = T().locating;
+    try {
+      navigator.geolocation.getCurrentPosition(p => {
+        const ll = [p.coords.latitude, p.coords.longitude];
+        if(nearestNode(ll[0], ll[1]) < 0){ msg.textContent = T().locOutside; return; }
+        msg.textContent = ""; $("street-" + which).value = ""; $("num-" + which).value = "";
+        if(which === "cole"){ state.origin = ll; renderCole(true); } else { state.lento = {a: ll, b: state.lento.b}; renderLento(true); }
+      }, () => { msg.textContent = T().noLoc; }, {enableHighAccuracy: true, timeout: 10000});
+    } catch(e) { msg.textContent = T().noLoc; }
+  }));
+
+  // ---------- mapa ----------
+  const map = L.map("map", {minZoom: 12, maxZoom: 19, maxBounds: L.latLngBounds([39.25, -0.62], [39.65, -0.15])}).setView([39.4699, -0.3763], 13);
+  map.attributionControl.setPrefix(false);
+  map.attributionControl.addAttribution('<a href="https://opendata.vlci.valencia.es/" target="_blank" rel="noopener">Ajuntament de València</a> (CC BY 4.0) · Catastro · © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>');
+  map.createPane("shade"); map.getPane("shade").style.zIndex = 350; map.getPane("shade").style.pointerEvents = "none";
+  map.createPane("pits"); map.getPane("pits").style.zIndex = 380;
+  const canvasR = L.canvas({padding: 0.3}), pitsR = L.canvas({pane: "pits", padding: 0.3});
+
+  const ShadeLayer = L.Layer.extend({
+    onAdd(m){
+      this._m = m; this._c = L.DomUtil.create("canvas", "leaflet-zoom-animated"); this._c.style.pointerEvents = "none";
+      m.getPane("shade").appendChild(this._c);
+      m.on("moveend zoomend resize viewreset", this.redraw, this);
+      if(m.options.zoomAnimation && L.Browser.any3d) m.on("zoomanim", this._anim, this);
+      this.redraw();
+    },
+    onRemove(m){ L.DomUtil.remove(this._c); m.off("moveend zoomend resize viewreset", this.redraw, this); m.off("zoomanim", this._anim, this); },
+    _anim(e){ if(!this._b) return; const s = this._m.getZoomScale(e.zoom), o = this._m._latLngBoundsToNewLayerBounds(this._b, e.zoom, e.center).min; L.DomUtil.setTransform(this._c, o, s); },
+    redraw(){
+      const m = this._m; if(!m) return;
+      const size = m.getSize(), px = Math.round(size.x * 0.2), py = Math.round(size.y * 0.2), W = size.x + 2 * px, Hh = size.y + 2 * py;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2), c = this._c;
+      c.width = W * dpr; c.height = Hh * dpr; c.style.width = W + "px"; c.style.height = Hh + "px";
+      const tl = m.containerPointToLayerPoint([-px, -py]); L.DomUtil.setPosition(c, tl);
+      this._b = L.latLngBounds(m.containerPointToLatLng([-px, size.y + py]), m.containerPointToLatLng([size.x + px, -py]));
+      const ctx = c.getContext("2d"); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, Hh);
+      const z = m.getZoom(), sc = 256 * Math.pow(2, z), o = m.getPixelOrigin(), ox = -o.x - tl.x, oy = -o.y - tl.y;
+      const vx0 = -ox / sc, vx1 = (W - ox) / sc, vy0 = -oy / sc, vy1 = (Hh - oy) / sc;
+      const cols = ["--s0","--s1","--s2","--s3","--s4"].map(cssVar), hsh = curSH();
+      ctx.lineCap = "round"; ctx.lineJoin = "round";
+      ctx.lineWidth = z <= 12 ? 0.9 : z === 13 ? 1.4 : z === 14 ? 2 : z === 15 ? 2.8 : z === 16 ? 3.8 : 5;
+      ctx.globalAlpha = this.dim ? 0.42 : 1;
+      const buckets = [[], [], [], [], []];
+      for(let i = 0; i < nL; i++){ if(bx1[i] < vx0 || bx0[i] > vx1 || by1[i] < vy0 || by0[i] > vy1) continue; buckets[bucket(hsh[i])].push(i); }
+      for(let b = 0; b < 5; b++){
+        ctx.strokeStyle = cols[b]; ctx.beginPath();
+        for(const i of buckets[b]){ const s = off[i], e = off[i + 1]; ctx.moveTo(wx[s] * sc + ox, wy[s] * sc + oy); for(let q = s + 1; q < e; q++) ctx.lineTo(wx[q] * sc + ox, wy[q] * sc + oy); }
+        ctx.stroke();
+      }
+    }
+  });
+  const shade = new ShadeLayer(); shade.addTo(map);
+
+  const routeLayer = L.layerGroup().addTo(map), schoolLayer = L.layerGroup().addTo(map);
+  const pitsLayer = L.layerGroup(), caminsLayer = L.layerGroup(), restLayer = L.layerGroup(), mayLayer = L.layerGroup(), prioLayer = L.layerGroup(), atrLayer = L.layerGroup(), coldLayer = L.layerGroup();
+
+  // ---------- colegios ----------
+  const nameCount = {}; SC.schools.forEach(s => nameCount[s.n] = (nameCount[s.n] || 0) + 1);
+  const schools = SC.schools.map((s, i) => ({...s, i, label: nice(s.n) + (nameCount[s.n] > 1 ? " · " + nice(s.barrio || "") : "")}));
+  const byLabel = new Map(schools.map(s => [s.label, s]));
+  $("school-list").innerHTML = schools.map(s => `<option value="${esc(s.label)}"></option>`).join("");
+  const vulKey = s => s.vul ? s.vul.replace("Vulnerabilidad ", "") : "none";
+  const vulTxt = s => T().vul[vulKey(s)] || T().vul.none;
+  const regTxt = s => T().reg[s.reg] || nice(s.reg).toLowerCase();
+  const sSh = s => plantOn() ? PS().sc_sh[s.i][K()] : s.sh[state.di][state.hi];
+  function schoolPopup(s){
+    const cur = s.sh[state.di][state.hi];
+    return `<b>${esc(s.label)}</b><br>${esc(upFirst(regTxt(s)))} · ${esc(nice(s.barrio || ""))}<br>${T().popShade(H(), cur, s.shh)}` +
+      (plantOn() ? `<br>${T().popPlant(cur, PS().sc_sh[s.i][K()], H())}` : "") + `<br>${esc(T().popPits(s.pits, s.atr))}<br>${esc(T().popVul(vulTxt(s)))}` +
+      (state.mode === "cole" ? `<br><button class="btn" data-go="${s.i}" type="button" style="margin-top:8px">${esc(T().goSchool)}</button>` : "");
+  }
+  const schoolMarkers = schools.map(s => L.circleMarker([s.lat, s.lon], {renderer: canvasR, radius: 5, weight: 1.5, color: cssVar("--ink"), fillColor: bucketCol(sSh(s)), fillOpacity: 1, bubblingMouseEvents: false})
+    .bindPopup(() => schoolPopup(s)).addTo(schoolLayer));
+  map.on("popupopen", e => { const b = e.popup.getElement().querySelector("[data-go]"); if(b) b.addEventListener("click", () => { map.closePopup(); setSchool(schools[+b.dataset.go]); }); });
+  const prio = schools.filter(s => s.prio).sort((a, b) => a.shh - b.shh);
+  prio.forEach(s => L.circleMarker([s.lat, s.lon], {renderer: canvasR, radius: 10, weight: 2.5, color: cssVar("--s0"), fill: false, interactive: false}).addTo(prioLayer));
+
+  // ---------- centros de mayores ----------
+  const mayores = P.mayores.map(m => ({...m, label: nice(m.n).replace(/^Centro Municipal de Actividades para Personas Mayores\s*/i, "Centro de mayores ").trim()}));
+  $("mayores-list").innerHTML = mayores.map(m => `<option value="${esc(m.label)}"></option>`).join("");
+  mayores.forEach(m => L.circleMarker([m.lat, m.lon], {renderer: canvasR, radius: 6, weight: 3, color: cssVar("--rest"), fillColor: cssVar("--panel"), fillOpacity: 1, bubblingMouseEvents: false})
+    .bindTooltip(esc(m.label)).on("click", () => setLentoDest(m)).addTo(mayLayer));
+
+  // ---------- capas del Ayuntamiento ----------
+  const pitMarkers = P.alcorques.map(([la, lo]) => L.circleMarker([la, lo], {renderer: pitsR, radius: 2.4, stroke: false, fillColor: cssVar("--pit"), fillOpacity: .9, interactive: false}).addTo(pitsLayer));
+  P.atropellos.forEach(([la, lo, g]) => L.circleMarker([la, lo], {renderer: pitsR, radius: g >= 3 ? 4 : 3, weight: 1, color: cssVar("--panel"), fillColor: cssVar("--atr"), fillOpacity: .9, interactive: false}).addTo(atrLayer));
+  P.pusdar.forEach(([la, lo, n]) => L.circleMarker([la, lo], {renderer: canvasR, radius: 6, weight: 2, color: cssVar("--panel"), fillColor: cssVar("--cold"), fillOpacity: 1, bubblingMouseEvents: false}).bindTooltip(() => esc(T().coldF + " · " + n)).addTo(coldLayer));
+  const caminCase = SC.camins.map(c => L.polyline(c.lines, {color: cssVar("--ink"), weight: 7, opacity: .55, interactive: false}).addTo(caminsLayer));
+  const cSh = k => plantOn() ? PS().cam_sh[k][K()] : SC.camins[k].sh[state.di][state.hi];
+  const caminLines = SC.camins.map((c, k) => L.polyline(c.lines, {color: bucketCol(cSh(k)), weight: 4, opacity: 1})
+    .bindTooltip(() => esc(T().caminTip(nice(c.n), cSh(k), H())), {sticky: true}).addTo(caminsLayer));
+
+  let zBand = -1, pitR = 1.3, pitKey = "";
+  function sizeMarkers(){
+    const z = map.getZoom(), band = z <= 13 ? 0 : z === 14 ? 1 : 2;
+    if(band === zBand) return; zBand = band;
+    const pr = [1.3, 1.9, 2.6][band], sr = [3.5, 4.5, 5.5][band];
+    pitR = pr; stylePits(); schoolMarkers.forEach(m => m.setRadius(sr)); prioLayer.eachLayer(l => l.setRadius(sr + 4.5));
+  }
+  // con la simulación, se destacan los alcorques que más sombra darían (el 25 % mejor)
+  function stylePits(){
+    const on = plantOn(), key = (on ? state.plant : 0) + "|" + pitR;
+    if(key === pitKey) return; pitKey = key;
+    const ps = on ? PS() : null;
+    pitMarkers.forEach((l, j) => { const top = on && ps.pitV[j] >= ps.pitQ; l.setRadius(top ? pitR + 1.6 : pitR); l.setStyle({fillOpacity: on ? (top ? 1 : .3) : .9}); });
+  }
+  const recolorSchools = () => { schoolMarkers.forEach((mk, k) => mk.setStyle({fillColor: bucketCol(sSh(schools[k]))})); caminLines.forEach((pl, k) => pl.setStyle({color: bucketCol(cSh(k))})); };
+  map.on("zoomend", sizeMarkers); sizeMarkers();
+
+  // ---------- dibujo y textos de rutas ----------
+  function drawRoute(r, kind){
+    if(kind === "corta") L.polyline(r.pts, {color: cssVar("--short"), weight: 4, opacity: .8, dashArray: "1 8", interactive: false}).addTo(routeLayer);
+    else { L.polyline(r.pts, {color: cssVar("--panel"), weight: 10, opacity: 1, interactive: false}).addTo(routeLayer); L.polyline(r.pts, {color: cssVar("--route"), weight: 6, opacity: 1, interactive: false}).addTo(routeLayer); }
+  }
+  const pin = (ll, txt, destP) => L.circleMarker(ll, {radius: destP ? 8 : 7, weight: 3, color: cssVar("--panel"), fillColor: destP ? cssVar("--route") : cssVar("--ink"), fillOpacity: 1, interactive: false})
+    .bindTooltip(esc(txt), {permanent: true, direction: "top", className: "tag", offset: [0, -8]}).addTo(routeLayer);
+  const minutes = (m, speed) => Math.max(1, Math.round(m / speed));
+  const safeLine = r => { const s = T().safeLine(r.crossNo, r.atr); return s.replace(/^(\d+ [^·]+?)(?= ·)/, r.crossNo ? "<b>$1</b>" : "$1").replace(/· (\d+ .+)$/, r.atr ? "· <b>$1</b>" : "· $1"); };
+  const optCard = (title, dash, r, speed) => `<div class="opt"><h3><span class="swatch${dash ? " dash" : ""}"></span>${title}</h3><span class="big">${r.pct} %</span><span class="sub">${T().inShade}</span><div class="bar"><i style="width:${r.pct}%"></i></div><span class="sub">${fmt(r.len)} m · ${minutes(r.len, speed)} min</span><span class="safe">${safeLine(r)}</span></div>`;
+  function gains(r1, r2){
+    const g = [], t = T();
+    if(r1.pct > r2.pct + 2) g.push(t.gainShade(r2.pct, r1.pct));
+    const dc = r2.crossNo - r1.crossNo; if(dc > 0) g.push(t.gainCross(dc));
+    const da = r2.atr - r1.atr; if(da > 0) g.push(t.gainAtr(da));
+    return g;
+  }
+  function costs(r1, r2){
+    const c = [], t = T();
+    if(r1.pct < r2.pct - 2) c.push(t.costShade(r1.pct, r2.pct));
+    if(r1.crossNo > r2.crossNo) c.push(t.costCross(r1.crossNo - r2.crossNo));
+    return c;
+  }
+  function pair(fromLL, toLL, mode, out){
+    const a = nearestNode(fromLL[0], fromLL[1]), b = nearestNode(toLL[0], toLL[1]);
+    if(a < 0 || b < 0){ out.innerHTML = `<p class="headline">${T().outside}</p>`; return null; }
+    if(a === b){ out.innerHTML = `<p class="headline">${T().same}</p>`; return null; }
+    const r1 = route(a, b, mode), r2 = route(a, b, "corta");
+    if(!r1 || !r2){ out.innerHTML = `<p class="headline">${T().noPath}</p>`; return null; }
+    return [r1, r2];
+  }
+
+  // ---------- modo: al cole ----------
+  function setSchool(s){ state.school = s.i; $("school-input").value = s.label; renderCole(true); }
+  function renderCole(fit){
+    const t = T();
+    routeLayer.clearLayers(); shade.dim = false;
+    $("street-cole").placeholder = t.streetPh;
+    const out = $("cole-result"), s = state.school != null ? schools[state.school] : null;
+    if(!s){ out.innerHTML = `<p class="headline">${t.pickSchool}</p>`; shade.redraw(); return; }
+    pin([s.lat, s.lon], s.label, true);
+    if(!state.origin){
+      out.innerHTML = `<p class="headline">${t.markFrom}</p><p class="help">${t.around(sSh(s), H())}</p>`;
+      if(fit) map.setView([s.lat, s.lon], 16); shade.redraw(); return;
+    }
+    const rr = pair(state.origin, [s.lat, s.lon], "fresca", out);
+    if(!rr){ pin(state.origin, t.start, false); shade.redraw(); return; }
+    const [rf, rc] = rr;
+    shade.dim = true; shade.redraw();
+    routeLayer.clearLayers(); drawRoute(rc, "corta"); drawRoute(rf, "fresca"); pin(state.origin, t.start, false); pin([s.lat, s.lon], s.label, true);
+    const extra = Math.round(rf.len - rc.len), g = gains(rf, rc);
+    let head = g.length ? (extra > 5 ? t.withMore(fmt(extra), joinList(g)) : upFirst(t.sameLen(joinList(g)))) : t.alreadyBest(rf.pct);
+    if(g.length){ const c = costs(rf, rc); if(c.length) head += t.inExchange(joinList(c)); }
+    out.innerHTML = `<p class="headline">${esc(head)}</p><div class="compare">${optCard(t.fresh, false, rf, 67)}${optCard(t.short, true, rc, 67)}</div>
+      <p class="help">${esc(t.helpColeRes(H(), fmt(rf.sun), fmt(rc.sun)))}</p>${directions(rf)}`;
+    if(fit) map.fitBounds(L.latLngBounds(rf.pts.concat(rc.pts)), {padding: [40, 40], maxZoom: 17});
+  }
+  $("school-input").addEventListener("input", e => { const s = byLabel.get(e.target.value); if(s){ state.school = s.i; renderCole(true); e.target.blur(); } });
+
+  // ---------- modo: paso lento ----------
+  function setLentoDest(m){ state.lento = {a: state.lento.a, b: {ll: [m.lat, m.lon], label: m.label}}; $("mayores-input").value = m.label; renderLento(true); }
+  function renderLento(fit){
+    const t = T();
+    routeLayer.clearLayers(); restLayer.clearLayers(); shade.dim = false;
+    const out = $("lento-result"), {a, b} = state.lento;
+    if(b) pin(b.ll, b.label || t.end, true);
+    if(!a){ out.innerHTML = `<p class="headline">${t.markHere}</p>`; shade.redraw(); return; }
+    pin(a, t.start, false);
+    if(!b){ out.innerHTML = `<p class="headline">${t.markTo}</p>`; shade.redraw(); return; }
+    const rr = pair(a, b.ll, "lenta", out);
+    if(!rr){ shade.redraw(); return; }
+    const [rl, rc] = rr;
+    shade.dim = true; shade.redraw();
+    routeLayer.clearLayers(); drawRoute(rc, "corta"); drawRoute(rl, "lenta"); pin(a, t.start, false); pin(b.ll, b.label || t.end, true);
+    const ra = restAlong(rl.pts), rb = restAlong(rc.pts);
+    ra.ids.forEach(j => { const r = rest[j]; L.circleMarker([r.la, r.lo], {radius: 4.5, weight: 1.5, color: cssVar("--panel"), fillColor: cssVar(r.t === "fria" ? "--cold" : "--rest"), fillOpacity: 1, bubblingMouseEvents: false}).bindTooltip(r.t === "banco" ? t.bench : r.t === "fuente" ? t.fountain : r.t === "fria" ? t.coldF : t.toilet).addTo(restLayer); });
+    restLayer.addTo(map);
+    const g = gains(rl, rc), c = ra.count;
+    const head = ra.ids.length ? t.slowHead(rl.pct, fmt(ra.maxGap)) : t.slowNoRest(rl.pct);
+    const st = t.stops(c.banco, c.fuente, c.fria, c.aseo);
+    out.innerHTML = `<p class="headline">${esc(head)}</p><div class="compare">${optCard(t.slow, false, rl, 50)}${optCard(t.short, true, rc, 50)}</div>
+      <div class="stops"><span>${st[0]}</span><span>${st[1]}</span><span>${st[2]}</span>${st[3] ? `<span class="cold">${st[3]}</span>` : ""}</div>
+      <p class="help">${esc(t.slowHelp(g.length ? upFirst(joinList(g)) : "", fmt(rb.maxGap), H()))}</p>${directions(rl)}`;
+    if(fit) map.fitBounds(L.latLngBounds(rl.pts.concat(rc.pts)), {padding: [40, 40], maxZoom: 17});
+  }
+  $("mayores-input").addEventListener("input", e => { const m = mayores.find(x => x.label === e.target.value); if(m){ setLentoDest(m); e.target.blur(); } });
+  $("lento-reset").addEventListener("click", () => { state.lento = {a: null, b: null}; ["mayores-input", "street-lento", "num-lento"].forEach(id => $(id).value = ""); renderLento(false); });
+
+  // ---------- modo: ayuntamiento ----------
+  const st = SC.stats;
+  function renderAyto(){
+    const t = T(), d = state.di, h = state.hi, Hh = H(), on = plantOn(), ps = on ? PS() : null;
+    $("kpis").innerHTML = `
+      <div class="kpi"><b>${on ? fmt1(ps.stats1.sombra_hora[d][h]) : st.sombra_hora[d][h]} %</b><span>${on ? t.kpi1p(Hh, fmt1(PL.base1.sombra_hora[d][h])) : t.kpi1(Hh)}</span></div>
+      <div class="kpi"><b>${on ? fmt1(ps.stats1.sin_sombra_hora[d][h]) : st.sin_sombra_hora[d][h]} %</b><span>${on ? t.kpi2p(Hh, fmt1(PL.base1.sin_sombra_hora[d][h])) : t.kpi2(Hh)}</span></div>
+      <div class="kpi"><b>${prio.length}</b><span>${t.kpi3}</span></div>
+      <div class="kpi"><b>${fmt(st.cruces_sin_semaforo)}</b><span>${t.kpi4}</span></div>`;
+    $("ayto-lead").textContent = t.lead(Hh, st.sombra_edif_hora[d][h], st.sombra_hora[d][h], fmt(st.alcorques), fmt(st.atropellos), fmt(st.atropellos_total));
+    $("camins-help").textContent = t.caminsHelp(Hh);
+    const order = SC.camins.map((c, i) => i).sort((x, y) => SC.camins[x].sh[d][h] - SC.camins[y].sh[d][h]);
+    $("camins-list").innerHTML = order.map(i => { const c = SC.camins[i]; return `<button class="row" type="button" data-c="${i}"><span class="nm">${esc(nice(c.n))}</span><span class="meta">${esc(t.caminLen(fmt(c.len)))}</span><span class="pct">${on ? c.sh[d][h] + " → " + ps.cam_sh[i][K()] : c.sh[d][h]} %</span></button>`; }).join("");
+    $("prio-list").innerHTML = prio.map(s => {
+      const vk = vulKey(s).toLowerCase();
+      return `<button class="row" type="button" data-s="${s.i}"><span class="nm">${esc(s.label)}</span><span class="meta">${esc(nice(s.barrio || ""))}<span class="pill ${vk}">${esc(vulTxt(s))}</span> · ${esc(regTxt(s))} · ${esc(t.prioMeta(s.pits, s.atr))}</span><span class="pct">${on ? s.shh + " → " + ps.sc_shh[s.i] : s.shh} %</span></button>`;
+    }).join("");
+    renderPlant();
+  }
+  function plantGain(){
+    const ps = PS(), a = SH[K()], b = PL.shp[state.plant - 1][K()]; let s = 0, w = 0;
+    for(const i of ps.idxA){ if(b[i] !== a[i]){ s += (b[i] - a[i]) * lLen[i]; w += lLen[i]; } }
+    return w ? Math.round(s / w) : 0;
+  }
+  function renderPlant(){
+    const t = T(), box = $("plant-gain");
+    $("plant-seg").innerHTML = t.plantOpts.map((o, i) => `<button type="button" data-pl="${i}" aria-pressed="${i === state.plant}">${esc(o)}</button>`).join("");
+    if(!state.plant || !PL){ $("plant-help").textContent = state.plant ? t.plantLoading : t.plantIntro(fmt(P.alcorques.length)); box.classList.add("hidden"); return; }
+    const ps = PS(), d = state.di, h = state.hi, gain = i => ps.sc_shh[i] - schools[i].shh;
+    $("plant-help").textContent = t.plantRes(t.plantKind[state.plant - 1], H(), fmt1(PL.base1.sombra_hora[d][h]), fmt1(ps.stats1.sombra_hora[d][h]), fmt(plantGain()));
+    const top = schools.map(s => s.i).filter(i => gain(i) > 0).sort((x, y) => gain(y) - gain(x) || schools[x].shh - schools[y].shh).slice(0, 8);
+    $("gain-list").innerHTML = top.map(i => { const s = schools[i]; return `<button class="row" type="button" data-s="${i}"><span class="nm">${esc(s.label)}</span><span class="meta">${esc(nice(s.barrio || ""))} · ${esc(t.gainMeta(s.pits))}</span><span class="pct">${s.shh} → ${ps.sc_shh[i]} %</span></button>`; }).join("");
+    box.classList.remove("hidden");
+  }
+  $("plant-seg").addEventListener("click", e => {
+    const b = e.target.closest("[data-pl]"); if(!b) return;
+    state.plant = +b.dataset.pl;
+    if(state.plant && !PL){ renderPlant(); loadPlant().then(() => refresh()).catch(err => { console.error(err); state.plant = 0; renderPlant(); $("plant-help").textContent = T().plantErr; }); return; }
+    refresh();
+  });
+  $("gain-list").addEventListener("click", e => { const b = e.target.closest("[data-s]"); if(!b) return; const s = schools[+b.dataset.s]; map.setView([s.lat, s.lon], 17); schoolMarkers[s.i].openPopup(); });
+  $("prio-list").addEventListener("click", e => { const b = e.target.closest("[data-s]"); if(!b) return; const s = schools[+b.dataset.s]; map.setView([s.lat, s.lon], 17); schoolMarkers[s.i].openPopup(); });
+  $("camins-list").addEventListener("click", e => {
+    const b = e.target.closest("[data-c]"); if(!b) return; const pl = caminLines[+b.dataset.c];
+    if(!map.hasLayer(caminsLayer)){ $("t-camins").checked = true; caminsLayer.addTo(map); }
+    map.fitBounds(pl.getBounds(), {padding: [60, 60], maxZoom: 17}); pl.openTooltip(pl.getBounds().getCenter());
+  });
+  const toggle = (id, layer) => $(id).addEventListener("change", e => { if(state.mode === "ayto") e.target.checked ? layer.addTo(map) : layer.remove(); });
+  toggle("t-camins", caminsLayer); toggle("t-pits", pitsLayer); toggle("t-atr", atrLayer); toggle("t-cold", coldLayer);
+
+  // ---------- controles: fecha, hora, prioridad, idioma ----------
+  function drawControls(){
+    const t = T();
+    $("dates").innerHTML = t.dates.map((d, i) => `<button type="button" data-d="${i}" aria-pressed="${i === state.di}">${esc(d)}</button>`).join("");
+    $("prio").innerHTML = t.prios.map((p, i) => `<button type="button" data-p="${i}" aria-pressed="${i === state.prio}">${esc(p)}</button>`).join("");
+    $("hours").innerHTML = HOURS.map((h, i) => `<button type="button" data-h="${i}" aria-pressed="${i === state.hi}">${h} h</button>`).join("");
+    $("hour-sun").textContent = t.datesLong[state.di] + " · " + t.sunAlt(G.sun[K()][1]);
+    $("legend-title").textContent = t.legend(H());
+  }
+  function refresh(){
+    drawControls();
+    recolorSchools(); stylePits();
+    renderAyto();
+    if(state.mode === "cole") renderCole(false); else if(state.mode === "lento") renderLento(false); else shade.redraw();
+  }
+  $("dates").addEventListener("click", e => { const b = e.target.closest("[data-d]"); if(b){ state.di = +b.dataset.d; refresh(); } });
+  $("hours").addEventListener("click", e => { const b = e.target.closest("[data-h]"); if(b){ state.hi = +b.dataset.h; refresh(); } });
+  $("prio").addEventListener("click", e => { const b = e.target.closest("[data-p]"); if(b){ state.prio = +b.dataset.p; refresh(); } });
+  $("lang-btn").addEventListener("click", () => {
+    LANG = LANG === "es" ? "va" : "es"; try { localStorage.setItem("rf-lang", LANG); } catch(e) {}
+    applyStatic(); if(CAL){ CAL = null; calP = null; } refresh();
+  });
+
+  // ---------- pestañas y toques en el mapa ----------
+  function setMode(m, fit){
+    state.mode = m;
+    document.querySelectorAll(".tabs button").forEach(b => b.setAttribute("aria-selected", String(b.dataset.mode === m)));
+    ["cole", "lento", "ayto"].forEach(x => $("mode-" + x).classList.toggle("hidden", x !== m));
+    map.closePopup(); routeLayer.clearLayers(); [restLayer, pitsLayer, caminsLayer, mayLayer, prioLayer, atrLayer, coldLayer].forEach(l => l.remove()); shade.dim = false;
+    recolorSchools(); stylePits();
+    if(m === "cole") renderCole(fit);
+    if(m === "lento"){ mayLayer.addTo(map); coldLayer.addTo(map); renderLento(fit); }
+    if(m === "ayto"){
+      prioLayer.addTo(map);
+      [["t-camins", caminsLayer], ["t-pits", pitsLayer], ["t-atr", atrLayer], ["t-cold", coldLayer]].forEach(([id, l]) => { if($(id).checked) l.addTo(map); });
+      renderAyto(); shade.redraw(); if(fit) map.setView([39.4699, -0.3763], 13);
+    }
+  }
+  document.querySelectorAll(".tabs button").forEach(b => b.addEventListener("click", () => setMode(b.dataset.mode, true)));
+  map.on("click", e => {
+    const ll = [e.latlng.lat, e.latlng.lng];
+    if(state.mode === "cole"){
+      if(state.school == null){ $("cole-result").innerHTML = `<p class="headline">${T().firstSchool}</p>`; return; }
+      state.origin = ll; $("street-cole").value = ""; $("num-cole").value = ""; renderCole(true);
+    } else if(state.mode === "lento"){
+      const s0 = state.lento;
+      if(s0.a && s0.b){ state.lento = {a: ll, b: null}; $("mayores-input").value = ""; }
+      else if(!s0.a) state.lento = {a: ll, b: s0.b};
+      else state.lento = {a: s0.a, b: {ll}};
+      $("street-lento").value = ""; $("num-lento").value = ""; renderLento(!!state.lento.b);
+    }
+  });
+
+  // ---------- colores al cambiar de tema ----------
+  function recolor(){
+    schoolMarkers.forEach((mk, i) => mk.setStyle({color: cssVar("--ink"), fillColor: bucketCol(sSh(schools[i]))}));
+    pitsLayer.eachLayer(l => l.setStyle({fillColor: cssVar("--pit")}));
+    atrLayer.eachLayer(l => l.setStyle({color: cssVar("--panel"), fillColor: cssVar("--atr")}));
+    coldLayer.eachLayer(l => l.setStyle({color: cssVar("--panel"), fillColor: cssVar("--cold")}));
+    caminLines.forEach((pl, i) => pl.setStyle({color: bucketCol(cSh(i))})); caminCase.forEach(pl => pl.setStyle({color: cssVar("--ink")}));
+    mayLayer.eachLayer(l => l.setStyle({color: cssVar("--rest"), fillColor: cssVar("--panel")}));
+    prioLayer.eachLayer(l => l.setStyle({color: cssVar("--s0")}));
+    if(state.mode === "cole") renderCole(false); else if(state.mode === "lento") renderLento(false); else shade.redraw();
+  }
+  const mq = window.matchMedia("(prefers-color-scheme: dark)"); if(mq.addEventListener) mq.addEventListener("change", recolor);
+  new MutationObserver(recolor).observe(document.documentElement, {attributes: true, attributeFilter: ["data-theme"]});
+
+  // ---------- ejemplos reales al abrir (15 de junio, 13 h) ----------
+  const ex = schools.find(s => s.n === "CEIP JESÚS");
+  if(ex){ state.school = ex.i; state.origin = [39.460937, -0.385789]; $("school-input").value = ex.label; }
+  const exM = mayores.find(m => /Trinitat$/i.test(m.label));
+  if(exM){ state.lento = {a: [39.480877, -0.368677], b: {ll: [exM.lat, exM.lon], label: exM.label}}; $("mayores-input").value = exM.label; }
+  drawControls(); renderAyto();
+  setMode("cole", true);
+  if(/[?&]debug=1/.test(location.search)) window.__rf = {schools, mayores, nearestNode, route, restAlong, state, plant: () => PL, curSH};
+}
+// instalación en el móvil y uso sin conexión: solo cuando la web se abre directamente, no dentro de otra página
+if("serviceWorker" in navigator && window.top === window && (location.protocol === "https:" || location.hostname === "localhost"))
+  window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
+</script>
+</body>
+</html>
