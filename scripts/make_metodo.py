@@ -25,7 +25,7 @@ datos = [
     ("Fuentes PUSDAR (agua filtrada y fría)", "Ajuntament de València", "CC BY 4.0", f"{len(P['pusdar'])} fuentes en el conjunto publicado"),
     ("Centros educativos", "Ajuntament de València", "CC BY 4.0", f"{fmt(len(SC['schools']))} centros de infantil, primaria, secundaria y educación especial"),
     ("Caminos escolares (Colecamins)", "Ajuntament de València", "CC BY 4.0", f"{len(SC['camins'])} caminos escolares señalizados"),
-    ("Vulnerabilidad por barrios y barrios", "Ajuntament de València", "CC BY 4.0", "índice global de vulnerabilidad de cada barrio"),
+    ("Vulnerabilidad por barrios y límites de los barrios", "Ajuntament de València", "CC BY 4.0", "índice global de vulnerabilidad de cada barrio"),
     ("Equipamientos para personas mayores", "Ajuntament de València", "CC BY 4.0", f"{len(P['mayores'])} centros con coordenadas"),
     ("Accidentes de tráfico 2022-2025", "Ajuntament de València", "CC BY 4.0", f"34.244 accidentes, de ellos {fmt(st['atropellos_total'])} atropellos; {fmt(st['atropellos'])} situados por su dirección"),
     ("Intensidad de tráfico por tramos", "Ajuntament de València", "CC BY 4.0", "394 tramos con aforo"),

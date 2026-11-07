@@ -1,7 +1,7 @@
 // Ruta fresca: guarda la web y sus datos para abrirla rápido y sin conexión.
 // Páginas: primero la red (para recibir cambios) y, sin conexión, la copia guardada.
 // Datos, iconos y Leaflet: primero la copia guardada. Cada versión de la web cambia VERSION y borra las copias antiguas.
-const VERSION = "rf-8048d7070702";
+const VERSION = "rf-76b3f68059a6";
 self.addEventListener("install", () => self.skipWaiting());
 self.addEventListener("activate", e => e.waitUntil(
   caches.keys().then(ks => Promise.all(ks.filter(k => k !== VERSION).map(k => caches.delete(k)))).then(() => self.clients.claim())));
