@@ -2,6 +2,8 @@
 
 Autor: Ferran Sánchez-Margalef (2026).
 
+Web: https://ferransanchezmargalef.github.io/ruta-fresca/
+
 Web que busca, para ir a pie por València, el camino con más sombra y menos riesgo a una hora y un día concretos, y lo compara con el más corto. Usa datos abiertos del Ajuntament de València, del Catastro y de OpenStreetMap.
 
 - **Al cole / A l'escola**: de casa al colegio, con la sombra a la hora de entrada o salida y los cruces peligrosos.
