@@ -1,0 +1,63 @@
+{
+ "base": {
+  "sombra_13h_junio": 49,
+  "sombra_17h_junio": 55,
+  "prioritarios": 128
+ },
+ "variantes": [
+  {
+   "variante": "Altura por planta 2,8 m",
+   "sombra_13h_junio": 48,
+   "sombra_17h_junio": 55,
+   "rho_colegios": 0.999,
+   "prioritarios_comunes": "128 de 128",
+   "prioritarios_variante": 135,
+   "dif_media_tramos_13h": 0.4
+  },
+  {
+   "variante": "Altura por planta 3,3 m",
+   "sombra_13h_junio": 50,
+   "sombra_17h_junio": 57,
+   "rho_colegios": 0.999,
+   "prioritarios_comunes": "128 de 128",
+   "prioritarios_variante": 136,
+   "dif_media_tramos_13h": 0.7
+  },
+  {
+   "variante": "Copas un 20 % menores",
+   "sombra_13h_junio": 46,
+   "sombra_17h_junio": 53,
+   "rho_colegios": 0.994,
+   "prioritarios_comunes": "123 de 128",
+   "prioritarios_variante": 135,
+   "dif_media_tramos_13h": 3.0
+  },
+  {
+   "variante": "Copas un 20 % mayores",
+   "sombra_13h_junio": 52,
+   "sombra_17h_junio": 58,
+   "rho_colegios": 0.994,
+   "prioritarios_comunes": "119 de 128",
+   "prioritarios_variante": 137,
+   "dif_media_tramos_13h": 3.1
+  },
+  {
+   "variante": "Acera a 1 m de la fachada",
+   "sombra_13h_junio": 51,
+   "sombra_17h_junio": 57,
+   "rho_colegios": 0.997,
+   "prioritarios_comunes": "125 de 128",
+   "prioritarios_variante": 128,
+   "dif_media_tramos_13h": 1.0
+  },
+  {
+   "variante": "Acera a 2,5 m de la fachada",
+   "sombra_13h_junio": 44,
+   "sombra_17h_junio": 52,
+   "rho_colegios": 0.989,
+   "prioritarios_comunes": "113 de 128",
+   "prioritarios_variante": 122,
+   "dif_media_tramos_13h": 2.1
+  }
+ ]
+}

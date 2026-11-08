@@ -1,0 +1,8 @@
+# Carpetas de trabajo del cálculo de Madrid (descargas, intermedios, web sin publicar y pruebas)
+madrid/raw/
+madrid/work/
+madrid/app/
+madrid/test/
+madrid/shots/
+madrid/vendor/
+__pycache__/

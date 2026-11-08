@@ -1,0 +1,158 @@
+{
+ "lavapies": {
+  "zona": "Lavapiés (Centro)",
+  "sol_ajustado": {
+   "acimut": 195.0,
+   "elevacion": 46.0
+  },
+  "umbral_luminancia": 89,
+  "pixeles_modelo": {
+   "exactitud": 0.868,
+   "precision": 0.95,
+   "sensibilidad": 0.874,
+   "F1": 0.911,
+   "equilibrada": 0.861,
+   "n": 55016
+  },
+  "pixeles_lejos_fachada": {
+   "exactitud": 0.815,
+   "precision": 0.939,
+   "sensibilidad": 0.776,
+   "F1": 0.85,
+   "equilibrada": 0.836,
+   "n": 27633
+  },
+  "pixeles_solo_arboles": {
+   "exactitud": 0.299,
+   "precision": 0.844,
+   "sensibilidad": 0.108,
+   "F1": 0.192,
+   "equilibrada": 0.521,
+   "n": 55016
+  },
+  "aceras": {
+   "puntos": 3477,
+   "acierto_modelo": 0.884,
+   "acierto_solo_arboles": 0.28,
+   "sombra_observada": 0.759,
+   "sombra_modelo": 0.715
+  }
+ },
+ "chamberi": {
+  "zona": "Trafalgar (Chamberí)",
+  "sol_ajustado": {
+   "acimut": 186,
+   "elevacion": 41
+  },
+  "umbral_luminancia": 79,
+  "pixeles_modelo": {
+   "exactitud": 0.826,
+   "precision": 0.937,
+   "sensibilidad": 0.801,
+   "F1": 0.864,
+   "equilibrada": 0.841,
+   "n": 77077
+  },
+  "pixeles_lejos_fachada": {
+   "exactitud": 0.808,
+   "precision": 0.944,
+   "sensibilidad": 0.749,
+   "F1": 0.835,
+   "equilibrada": 0.833,
+   "n": 57652
+  },
+  "pixeles_solo_arboles": {
+   "exactitud": 0.442,
+   "precision": 0.915,
+   "sensibilidad": 0.208,
+   "F1": 0.339,
+   "equilibrada": 0.583,
+   "n": 77077
+  },
+  "aceras": {
+   "puntos": 4129,
+   "acierto_modelo": 0.847,
+   "acierto_solo_arboles": 0.434,
+   "sombra_observada": 0.69,
+   "sombra_modelo": 0.635
+  }
+ },
+ "goya": {
+  "zona": "Goya (Salamanca)",
+  "sol_ajustado": {
+   "acimut": 191.0,
+   "elevacion": 42.0
+  },
+  "umbral_luminancia": 81,
+  "pixeles_modelo": {
+   "exactitud": 0.847,
+   "precision": 0.939,
+   "sensibilidad": 0.81,
+   "F1": 0.869,
+   "equilibrada": 0.86,
+   "n": 80832
+  },
+  "pixeles_lejos_fachada": {
+   "exactitud": 0.842,
+   "precision": 0.946,
+   "sensibilidad": 0.779,
+   "F1": 0.855,
+   "equilibrada": 0.857,
+   "n": 65139
+  },
+  "pixeles_solo_arboles": {
+   "exactitud": 0.468,
+   "precision": 0.911,
+   "sensibilidad": 0.174,
+   "F1": 0.293,
+   "equilibrada": 0.573,
+   "n": 80832
+  },
+  "aceras": {
+   "puntos": 3730,
+   "acierto_modelo": 0.835,
+   "acierto_solo_arboles": 0.463,
+   "sombra_observada": 0.649,
+   "sombra_modelo": 0.557
+  }
+ },
+ "vallecas": {
+  "zona": "Ensanche de Vallecas",
+  "sol_ajustado": {
+   "acimut": 199.0,
+   "elevacion": 40.0
+  },
+  "umbral_luminancia": 110,
+  "pixeles_modelo": {
+   "exactitud": 0.767,
+   "precision": 0.815,
+   "sensibilidad": 0.479,
+   "F1": 0.603,
+   "equilibrada": 0.707,
+   "n": 156299
+  },
+  "pixeles_lejos_fachada": {
+   "exactitud": 0.765,
+   "precision": 0.823,
+   "sensibilidad": 0.434,
+   "F1": 0.568,
+   "equilibrada": 0.691,
+   "n": 144245
+  },
+  "pixeles_solo_arboles": {
+   "exactitud": 0.658,
+   "precision": 0.75,
+   "sensibilidad": 0.113,
+   "F1": 0.197,
+   "equilibrada": 0.546,
+   "n": 156299
+  },
+  "aceras": {
+   "puntos": 4959,
+   "acierto_modelo": 0.719,
+   "acierto_solo_arboles": 0.63,
+   "sombra_observada": 0.405,
+   "sombra_modelo": 0.225
+  }
+ }
+}

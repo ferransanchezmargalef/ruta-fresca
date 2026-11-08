@@ -4,6 +4,8 @@ Autor: Ferran Sánchez-Margalef (2026).
 
 Web: https://ferransanchezmargalef.github.io/ruta-fresca/
 
+También hay una versión para Madrid, con sus propios datos y su propia página de método: https://ferransanchezmargalef.github.io/ruta-fresca/madrid/ (código, datos e informes en `madrid/`, ver `madrid/README.md`).
+
 Web que busca, para ir a pie por València, el camino con más sombra y menos riesgo a una hora y un día concretos, y lo compara con el más corto. Usa datos abiertos del Ajuntament de València, del Catastro y de OpenStreetMap.
 
 - **Al cole / A l'escola**: de casa al colegio, con la sombra a la hora de entrada o salida y los cruces peligrosos.
@@ -27,6 +29,7 @@ data/calles.json       callejero municipal con rangos de portales (búsqueda por
 data/plant.json        simulación de plantación de los alcorques vacíos (se carga al usarla)
 scripts/               cálculo de los datos, página de método e iconos
 informes/              validación, sensibilidad, fuentes e informe de calidad de datos
+madrid/                la versión de Madrid (web, datos, scripts e informes)
 ```
 
 ## Publicación
