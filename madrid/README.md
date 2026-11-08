@@ -48,6 +48,7 @@ Requisitos: Python 3.10+, `numpy`, `pandas`, `scipy`, `shapely>=2`, `pyproj`, `p
 10. `python3 scripts/elegir_ejemplos.py` (ejemplos que se ven al abrir la web)
 11. `python3 scripts/make_metodo_madrid.py` y `python3 scripts/montar_web.py` (página de método, versión de `sw.js` y copia de prueba; necesita Leaflet 1.9.4 en `vendor/package`, de `npm pack leaflet@1.9.4`)
 12. `python3 scripts/probar.py` (prueba la web en Chromium, también sin conexión)
+13. `python3 -I scripts/estudio_entornos.py` (estudio de los entornos escolares: cifras en `work/estudio.json` y mapa en `work/estudio_mapa.png`; usa la web ya montada en `app/` y necesita además `matplotlib`)
 
 ## Atribuciones
 
